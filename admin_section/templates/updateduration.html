@@ -1,0 +1,69 @@
+{% load static %}
+{% include 'header.html' %}
+<style>
+  td{
+    font-size: 16px;
+    font-family:Arial;
+    font-weight: 450;
+  }
+  .previous {
+    color: black;
+  } 
+
+</style>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1><b>Update Duration</b></h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a href="../../show_duration" class="previous">&laquo; <b>Previous</b></a>
+      </li>
+    </ul> 
+   
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+         
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+            
+             
+         
+           
+              <!-- Table with stripped rows -->
+              
+              {% comment %} <form action="{% url 'update_duration' id=members.id %}" method="post" id="form">  
+                {% csrf_token %}
+                <input type="text" value="{{members.durationadd}}" name="durationadd">  
+                <button type="submit" id="form-submit" style="border-radius:12px;" class="btn btn-primary">Save</button>
+               </form> {% endcomment %}
+
+
+
+
+             
+             
+ <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+                
+ 
+</body>
+</html>  
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+
+</html>

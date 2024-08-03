@@ -1,0 +1,193 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Course Profile</title>
+  <style>
+    .previous {
+      color: black;
+    }
+    .profile-name {
+      font-size: 24px; /* Set font size for the name */
+      color: #333; /* Set text color */
+      margin-bottom: 10px; /* Add space between the name and other content */
+    }
+    .profile-img {
+      width: 150px; /* Set the width of the image */
+      height: 150px; /* Set the height of the image */
+      border-radius: 50%; /* Make the image round */
+      object-fit: cover; /* Ensure the image covers the entire container */
+      margin-bottom: 20px; /* Add space between the image and other content */
+    }
+    .h6,class{
+      font-size: 16px;
+      font-family:Arial;
+      font-weight: 450;
+  }
+  </style>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Student Details</h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a href="../../std" class="previous">&laquo; <b>Previous</b></a>
+      </li>
+    </ul>  
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+              <h6 class="profile-name">{{result.firstname}}{{result.lastname}}</h6>
+              <img src="../../media/{{result.image}}"  alt="Profile" class="profile-img rounded-circle">
+              <div class="social-links mt-2">
+               
+              
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+                  <h5 class="card-title">Student Profile</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Date of Birth</div>
+                    <div class="col-lg-9 col-md-8">{{result.dob}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Age</div>
+                    <div class="col-lg-9 col-md-8">{{result.age}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Gender</div>
+                    <div class="col-lg-9 col-md-8">{{result.gender}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">{{result.email}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Contact No</div>
+                    <div class="col-lg-9 col-md-8">{{result.contact}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Whatsapp</div>
+                    <div class="col-lg-9 col-md-8">{{result.whatsapp}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Marital Status</div>
+                    <div class="col-lg-9 col-md-8">{{result.maritalstatus}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Qualification</div>
+                    <div class="col-lg-9 col-md-8">{{result.qualification}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Category</div>
+                    <div class="col-lg-9 col-md-8">{{result.category}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Occupation</div>
+                    <div class="col-lg-9 col-md-8">{{result.occupation}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Flat No/Door No/House Name</div>
+                    <div class="col-lg-9 col-md-8">{{result.address}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">City</div>
+                    <div class="col-lg-9 col-md-8">{{result.city}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Place</div>
+                    <div class="col-lg-9 col-md-8">{{result.place}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">District</div>
+                    <div class="col-lg-9 col-md-8">{{result.district}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Post</div>
+                    <div class="col-lg-9 col-md-8">{{result.post}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Pin</div>
+                    <div class="col-lg-9 col-md-8">{{result.pin}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Guardian Name</div>
+                    <div class="col-lg-9 col-md-8">{{result.gname}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Guardian Contact</div>
+                    <div class="col-lg-9 col-md-8">{{result.gcontact}}</div>
+                  </div>
+                  {% comment %} <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Date Of Beginning Course</div>
+                    <div class="col-lg-9 col-md-8">{{result.dateofjoin}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Course Name</div>
+                    <div class="col-lg-9 col-md-8">{{result.course}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Batch</div>
+                    {% for i in student %}
+                    <div class="col-lg-9 col-md-8">{{i.batch}}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Course Mode</div>
+                    <div class="col-lg-9 col-md-8">{{result.coursemode}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Duration</div>
+                    <div class="col-lg-9 col-md-8">{{result.duration}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Category</div>
+                    {% for i in student %}
+                    <div class="col-lg-9 col-md-8">{{i.category}}</div>
+                    {% endfor %}
+                  </div> {% endcomment %}
+              </div>
+
+                  <!-- Profile Edit Form -->
+        
+
+  </main><!-- End #main -->
+
+</body>
+
+</html>
+{% include 'footer.html' %}

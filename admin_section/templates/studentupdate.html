@@ -1,0 +1,236 @@
+{% load static %}
+{% include 'header.html' %}
+
+  <style>
+    .label{
+        font-size: 16px;
+        font-family:Arial;
+        font-weight: 450;
+    }
+    .previous {
+        color: black;
+      }
+</style>
+
+<script>   
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('dob').addEventListener('change', function() {
+        const dob = new Date(this.value);
+        const age = calculateAge(dob);
+        document.getElementById('age').value = age;
+    });
+
+    function calculateAge(dob) {
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age;
+    }
+});
+</script>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1><b>Update Registration Form</b></h1>
+      <nav>
+        <!-- <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Forms</li>
+          <li class="breadcrumb-item active">Elements</li>
+        </ol> -->
+      </nav>
+    </div><!-- End Page Title -->
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a href="../../std" class="previous">&laquo; <b>Previous</b></a>
+        </li>
+      </ul>  
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-11">
+
+          <div class="card">
+            <div class="card-body" style="padding:20px;,back-ground color:black;">
+              <!-- General Form Elements -->
+              <form  method="post" id="form" action="{% url 'update_student' id=member.id %}" enctype="multipart/form-data">
+                 {% csrf_token %}
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title">Student Personal Information</h5>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="firstname" class="label">First Name<small><!--(Asper School Certificate)--></small></label>
+                            <input name="firstname" type="text" value="{{member.firstname}}" class="form-control">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="lastname" class="label">Last Name</label>
+                            <input id="lastname" name="lastname" value="{{member.lastname}}" type="text"  class="form-control" >
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="dob" class="label">Date of Birth</label>
+                            <input id="dob" name="dob" type="date"  value="{{member.dob}}" class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="age" class="label">Age</label>
+                            <input id="age" name="age" type="text"  value="{{member.age}}" class="form-control" readonly>
+    
+                        </div>
+                    </div>
+                      
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label class="label">Gender</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value1" value="Male" {% if member.gender == 'Male' %} checked{% endif %}>
+                                    <label class="form-check-label" for="Male">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value2" value="Female" {% if member.gender == 'Female' %} checked{% endif %}>
+                                    <label class="form-check-label" for="Female">Female</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value3" value="Others" {% if member.gender == 'Others' %} checked{% endif %} >
+                                    <label class="form-check-label" for="Others">Others</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                              <label for="email" class="label">Email</label>
+                              <input name="email" type="email" value="{{member.email}}" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="contact" class="label">Contact No</label>
+                            <input type="text" name="contact" value="{{member.contact}}" class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="whatsapp" class="label">Whatsapp</label>
+                            <input type="text" name="whatsapp" value="{{member.whatsapp}}" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="maritalstatus" class="label">Marital Status</label>  
+                            <select id="maritalstatus" name="maritalstatus" class="form-control">
+                                <option value="" {% if not member.maritalstatus %} selected {% endif %} disabled hidden>Select Marital Status</option>
+                                <option value="Single" {% if member.maritalstatus == 'Single' %} selected {% endif %}>Single</option>
+                                <option value="Married" {% if member.maritalstatus == 'Married' %} selected {% endif %}>Married</option>
+                                <option value="Divorced" {% if member.maritalstatus == 'Divorced' %} selected {% endif %}>Divorced</option>
+                                <option value="Widowed" {% if member.maritalstatus == 'Widowed' %} selected {% endif %}>Widowed</option>
+                            </select> 
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="qualification" class="label">Qualification</label>
+                            <input type="text" name="qualification" value="{{member.qualification}}" class="form-control" >
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="category" class="label">Category</label>
+                            <select id="category" name="category" class="form-control">
+                                <option value="" {% if not member.category %} selected {% endif %} disabled hidden>Select Category</option>
+                                <option value="SC" {% if member.category == 'SC' %} selected {% endif %}>SC</option>
+                                <option value="ST" {% if member.category == 'ST' %} selected {% endif %}>ST</option>
+                                <option value="OBC" {% if member.category == 'OBC' %} selected {% endif %}>OBC</option>
+                                <option value="OEC" {% if member.category == 'OEC' %} selected {% endif %}>OEC</option>
+                                <option value="General" {% if member.category == 'General' %} selected {% endif %}>General</option>
+                                <option value="BPL" {% if member.category == 'BPL' %} selected {% endif %}>BPL</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="occupation" class="label">Occupation</label>
+                            <input name="occupation" type="text" value="{{member.occupation}}" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                           <label for="image" class="label">Image</label>
+                           <div class="d-flex align-items-center">
+                              <div class="image-preview mr-3">
+                                  <img id="uploadedImage" src="../../media/{{ member.image }}" class="rounded img-fluid" style="max-width: 100px; max-height: 150px;">
+                              </div>
+                              <input name="image" class="form-control-file" type="file" id="image" onchange="previewImage(this);">
+                          </div>
+                      </div>
+                    </div>
+                      
+            
+                    <div class="container">
+                        <div class="row mb-4">
+                            <div class="col-sm-12">
+                                <h5 class="card-title"> ADDRESS </h5>
+                            </div>
+
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="address" class="label">Flat No/Door No/House Name</label>
+                            <input name="address" type="text" value="{{member.address}}"  class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="city" class="label">City</label>
+                            <input name="city" type="text" value="{{member.city}}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="place" class="label">Place</label>
+                            <input type="text" name="place" value="{{member.place}}" class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="district" class="label">District</label>
+                            <input type="text" name="district" value="{{member.district}}" class="form-control" >
+                        </div>
+                    </div>
+                        <div class="row mb-3">
+                          <div class="col-sm-6 mb-3">
+                                <label for="post" class="label">Post Office</label>
+                                <input type="text" name="post" value="{{member.post}}" class="form-control" >
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="pin" class="label">Pin Code</label>
+                                <input type="text" name="pin" value="{{member.pin}}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-sm-6 mb-3">
+                              <label for="guardianname" class="label">Guardian Name</label>
+                              <input type="text" name="gname" value="{{member.gname}}" class="form-control">
+                          </div>
+                          <div class="col-sm-6 mb-3">
+                              <label for="guardiancontact" class="label">Guardian Contact Number</label>
+                              <input type="text" name="gcontact" value="{{member.gcontact}}" class="form-control">
+                          </div>
+                      </div>
+        
+                             <div class="row mb-3">
+                                 <div class="col-sm-10">
+                                 <button type="submit" id="form-submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                </form> 
+                 
+  </main>
+</body>
+
+</html>
+{% include 'footer.html' %}
+

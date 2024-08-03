@@ -1,0 +1,435 @@
+{% load static %}
+{% include 'mainheader.html' %}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <style>
+        .iti {
+            width: 100%;
+        }
+        .iti__flag-container {
+            padding-right: 15px; /* Adjust the padding as needed */
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+   
+    <script src="{% static 'states/js/jquery.min.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Assuming you want to listen to changes on the radio button selection
+            var usernameInputs = document.querySelectorAll('input[name="username"]');
+            var emailInput = document.getElementById('email');
+            var contactInput = document.getElementById('contact');
+        
+            usernameInputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    var usernameType = document.querySelector('input[name="username"]:checked').value;
+                    var username = (usernameType === 'email') ? emailInput.value : contactInput.value;
+                    var email = emailInput.value;
+                    var contact = contactInput.value;
+        
+                    fetch('validate_username', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: new URLSearchParams({
+                            'username': username,
+                            'email': email,
+                            'contact': contact
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('usernameMessageContainer').innerText = data.message;
+                        console.log(data.message); // Log the message to the console for debugging
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the AJAX request:', error);
+                    });
+                });
+            });
+        });
+        
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        
+
+     // Function to validate email format
+        function validateEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        }
+    
+        // Function to validate password format
+        function validatePassword(password) {
+            var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,30}$/;
+            return re.test(password);
+        }
+    
+        // Function to validate contact number format
+        function validatecontact(contact) {
+             var re = /^\d{3}-\d{7}$/;
+             return re.test(contact);
+        }
+
+        // Function to validate form fields
+        function validateForm() {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var gender = document.querySelector('input[name="gender"]:checked');
+            var dob = document.getElementById('dob').value;
+            var qualification = document.getElementById('qualification').value;
+            var contact = document.getElementById('contact').value;
+            var email = document.getElementById('email').value;
+            var username = document.querySelector('input[name="username"]:checked');
+            var password = document.getElementById('password').value;
+            var cpassword = document.getElementById('cpassword').value;
+            var termsChecked = document.getElementById('box-1').checked;
+    
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(function (element) {
+                element.textContent = '';
+            });
+    
+            // Flag to track overall validation status
+            var isValid = true;
+            // Validate first name
+            if (!firstname.trim()) {
+                document.getElementById('firstname-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            } else if (!/^[a-zA-Z ]+$/.test(firstname)) {
+                document.getElementById('firstname-error').textContent = 'First name should only contain letters and spaces.';
+                isValid = false;
+            }
+    
+            // Validate last name
+            if (!lastname.trim()) {
+                document.getElementById('lastname-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            } else if (!/^[a-zA-Z ]+$/.test(lastname)) {
+                document.getElementById('lastname-error').textContent = 'Last name should only contain letters and spaces.';
+                isValid = false;
+            }
+    
+            // Validate gender
+            if (!gender) {
+                document.getElementById('gender-error').textContent = 'You must select a gender.';
+                isValid = false;
+            }
+    
+            // Validate date of birth
+            if (!dob.trim()) {
+                document.getElementById('dob-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            }
+    
+            // Validate qualification
+            if (!qualification.trim()) {
+                document.getElementById('qualification-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            }
+    
+           // Validate contact number
+           if (!contact.trim()) {
+            document.getElementById('contact-error').textContent = 'You can\'t leave this field blank.';
+            isValid = false;
+           } else if (!/^\d{10}$/.test(contact)) {
+            document.getElementById('contact-error').textContent = 'Please enter a valid 10-digit contact number.';
+            isValid = false;
+           }
+
+            // Validate email
+            if (!email.trim()) {
+                document.getElementById('email-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
+    
+            // Validate username
+            if (!username) {
+                document.getElementById('username-error').textContent = 'You must select a username type (Email or contact).';
+                isValid = false;
+            }
+    
+            // Validate password
+            if (!password.trim()) {
+                document.getElementById('password-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            } else if (!validatePassword(password)) {
+                document.getElementById('password-error').textContent = 'Password must be 8 characters long and contain at least one uppercase letter, one symbol, and one number.';
+                isValid = false;
+            }
+    
+            // Validate confirm password
+            if (!cpassword.trim()) {
+                document.getElementById('cpassword-error').textContent = 'You can\'t leave this field blank.';
+                isValid = false;
+            } else if (cpassword !== password) {
+                document.getElementById('cpassword-error').textContent = 'Password does not match.';
+                isValid = false;
+            }
+    
+            // Validate terms and conditions checkbox
+            if (!termsChecked) {
+                document.getElementById('username-error').textContent =  'You must select a username type (Email or contact).';
+                isValid = false;
+
+            }
+            if (isValid) {
+                // Save form data and show success message
+                alert('Registered Successfully.');
+            }
+            return isValid;
+        }
+</script>
+
+   
+
+    <!--================= Wrapper Start Here =================-->
+    <div class="react-wrapper">
+        <div class="react-wrapper-inner">  
+            <div class="react-login-page react-signup-page pt---20 pb---120">
+                <div class="container">
+                    <div class="row">                            
+                        <div class="col-lg-12">
+                            <div class="login-right-form">
+                                <form method="post" id="form" action="signup" onsubmit="return validateForm()">
+                                    {% csrf_token %}
+                                    <div class="login-top">
+                                        <h3>Sign Up</h3>
+                                        <p>Already have an account? <a href="loginmain">Log in</a></p>
+                                    </div>
+                                    <p>
+                                        <label>First Name<span style="color: red;">*</span></label>
+                                        <input placeholder="First Name" type="text" id="firstname" name="firstname">
+                                        <span id="firstname-error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Last Name<span style="color: red;">*</span></label>
+                                        <input placeholder="Last Name" type="text" id="lastname" name="lastname">
+                                        <span id="lastname-error" class="error-message"></span>
+                                    </p>
+                                    <p style="display: flex; align-items: center;">
+                                        <label style="margin:5px;">Gender<span style="color: red;">*</span></label>
+                                       
+                                        <input type="radio" id="male" name="gender" value="Male"><label class="radio-inline" style="margin:5px;"> Male</label>
+                                        <input type="radio" id="female" name="gender" value="Female"> <label class="radio-inline" style="margin:5px;">Female</label>
+                                        <input type="radio" id="others" name="gender" value="Others"><label class="radio-inline" style="margin:5px;">Others</label>
+                                        
+                                    </p>
+                                    <span id="gender-error" class="error-message"></span>
+                                    <p>
+                                        <label>Date of Birth<span style="color: red;">*</span></label>
+                                        <input placeholder="Date of Birth" type="date" id="dob" name="dob">
+                                        <span id="dob-error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Qualification<span style="color: red;">*</span></label>
+                                        <input placeholder="Qualification" type="text" id="qualification" name="qualification">
+                                        <span id="qualification-error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Mobile No<span style="color: red;">*</span></label>
+                                        <input  type="tel" id="contact" name="contact" placeholder="Contact No">
+                                        <span id="contact-error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Email<span style="color: red;">*</span></label>
+                                        <input placeholder="Email" type="email" id="email" name="email">
+                                        <span id="email-error" class="error-message"></span> 
+                                    </p>
+                                    <p style="display: flex; align-items: center;">
+                                        <label style="margin:20px;">Username<span style="color: red;">*</span></label>
+                                        <input type="radio" id="email" name="username" value="email"><label class="radio-inline" style="margin:5px;">Email</label>
+                                        <input type="radio" id="contact" name="username" value="contact"><label class="radio-inline" style="margin:5px;">Mobile</label>  
+                                    </p>
+                                    <span id="usernameMessageContainer" style="color: red;"></span>
+                                    <span id="username-error" class="error-message"></span>
+    
+                                    <p>
+                                        <label>Password<span style="color: red;">*</span></label>
+                                        <input placeholder="Password" type="password" id="password" name="password">
+                                        <span id="password-error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Confirm Password<span style="color: red;">*</span></label>
+                                        <input placeholder="Confirm Password" type="password" id="cpassword" name="cpassword">
+                                        <span id="cpassword-error" class="error-message"></span>
+                                    </p>
+
+                                    <div class="back-check-box">
+                                        <input type="checkbox" id="box-1"> I agree to the <em>Terms & Conditions</em>
+                                        <p></p>
+                                    </div>
+                                    <button type="submit" id="myBtn" name="submit">Register<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+                                    <div id="message"></div>
+                                    {% comment %} <span class="back-or"> ........ or Login with ........ </span> {% endcomment %}
+                                    {% comment %} <ul class="social-links">
+                                        <li><a href="#"><span aria-hidden="true" class="social_facebook"></span></a></li>
+                                        <li><a href="#"><span aria-hidden="true" class="social_twitter"></span></a></li>
+                                    </ul> {% endcomment %}
+                                </form>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                        </div>
+                    </div>
+                                    
+</body>
+</html>
+<footer id="react-footer" class="react-footer react-footer-two pt---120">
+    <div class="footer-top">
+        {% comment %} <div class="container">
+            <div class="footer-top-cta">
+                <div class="row">
+                    <div class="col-lg-7">
+                     
+                        <h4>Free Online Course</h4>
+                        <h3>Ready to dive in? <br> Start your free Course today.</h3>
+                        {% comment %} <img src="{% static 'states/images/cta.jpg' %}" alt="logo" class="footer-top-cta"></a> {% endcomment %}
+                    {% comment %} </div>
+                    <div class="col-lg-5 text-right">
+                        <a href="#">Go To FAQ <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-1">
+                        <div class="footer-logo white">
+                            <a href="index.html" class="logo-text"> <img src="{% static 'states/images/footer-logo2.png' %}" alt="logo"></a>
+                        </div>
+                        <h5 class="footer-subtitle">There are course and event custom <br>
+                        post types so you can easily create and<br> manage course, events.</h5>
+                        <ul class="footer-address">
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><a href="tel:+(402)76244183"> +(402) 762 441 83 </a></li>
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><a href="mailto:info@yourdmain.com"> info@echooling.com </a></li>
+                        </ul>                               
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-2">
+                        <h3 class="footer-title">About Us</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="coureses-grid.html">Courses</a></li>
+                                <li><a href="#">Events</a></li>
+                                <li><a href="#">Career</a></li>
+                                <li><a href="profile.html">Become a Teacher</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-3">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="#">Browse Library</a></li>
+                                <li><a href="#">Library</a></li>
+                                <li><a href="#">Partners</a></li>
+                                <li><a href="blog.html">News & Blog</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget footer-widget-4">
+                        <h3 class="footer-title">Newsletter</h3> 
+                        <div class="footer3__form">
+                            <p>Get the latest Echooling news <br>delivered to you inbox</p>
+                            <form action="#">
+                                <input type="email" placeholder="Enter your email">
+                                <button class="footer3__form-1">
+                                    <i class="arrow_right"></i>
+                                </button>
+                            </form>
+                        </div>                                                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="copyright">  
+        <div class="container">                  
+            <div class="react-copy-left">© 2022 <a href="#">Echooling.</a> All Rights Reserved</div>
+            <div class="react-copy-right">
+                <ul class="social-links">
+                    <li class="follow">Follow us</li>
+                    <li><a href="#"><span aria-hidden="true" class="social_facebook"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_twitter"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_linkedin"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!--================= Jquery latest version =================-->
+    <script src="{% static 'states/js/jquery.min.js' %}"></script>
+    <!--================= Modernizr js =================-->
+    <script src="{% static 'states/js/modernizr-2.8.3.min.js' %}"></script>
+    <!--================= Bootstrap js =================-->
+    <script src="{% static 'states/js/bootstrap.min.js' %}"></script>
+    <!--================= Owl Carousel js =================-->
+    <script src="{% static 'states/js/owl.carousel.min.js' %}"></script>
+    <!--================= Magnific Popup =================-->
+    <script src="{% static 'states/js/jquery.magnific-popup.min.js' %}"></script>
+    <!--================= Counter up js =================-->
+    <script src="{% static 'states/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'states/js/waypoints.min.js' %}"></script>
+    <!--================= Wow js =================-->
+    <script src="{% static 'states/js/wow.min.js' %}"></script>     
+    <script src="{% static 'states/js/isotope.pkgd.min.js' %}"></script>
+    <!--================= Imagesloaded.pkgd.min js =================-->
+    <script src="{% static 'states/js/imagesloaded.pkgd.min.js' %}"></script>            
+    <!--================= menus js =================-->
+    <script src="{% static 'states/js/menus.js' %}"></script>
+    <!--================= Plugins js =================-->
+    <script src="{% static 'states/js/plugins.js' %}"></script>       
+	<!--================= Main js =================-->
+    <script src="{% static 'states/js/main.js' %}"></script>
+
+                                    
+
+
+

@@ -1,0 +1,388 @@
+{% load static %}
+{% include 'mainheader.html' %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <style>
+        .iti {
+            width: 100%;
+        }
+        .iti__flag-container {
+            padding-right: 15px; /* Adjust the padding as needed */
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+   
+</head>
+<body>
+    <script>
+            function validateForm() {
+                let isValid = true;
+    
+                // Guardian Name validation
+                const gname = document.getElementById("gname").value;
+                const gnameError = document.getElementById("guardian_name_error");
+                const gnamePattern = /^[a-zA-Z\s]+$/;
+                if (gname === "") {
+                    gnameError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else if (!gnamePattern.test(gname)) {
+                    gnameError.textContent = "Guardian name must contain only letters and spaces.";
+                    isValid = false;
+                } else {
+                    gnameError.textContent = "";
+                }
+    
+                // Guardian Contact validation
+                const gcontact = document.getElementById("gcontact").value;
+                const gcontactError = document.getElementById("secondary_contact_error");
+                if (gcontact === "" || gcontact.length !== 10) {
+                    gcontactError.textContent = "You can't leave this field blank and must be 10 digits.";
+                    isValid = false;
+                } else {
+                    gcontactError.textContent = "";
+                }
+    
+                // WhatsApp Number validation
+                const whatsapp = document.getElementById("whatsapp").value;
+                const whatsappError = document.getElementById("whatsapp_no_error");
+                if (whatsapp === "" || whatsapp.length !== 10) {
+                    whatsappError.textContent = "WhatsApp number must be 10 digits and can't be left blank.";
+                    isValid = false;
+                } else {
+                    whatsappError.textContent = "";
+                }
+    
+                // Address validation
+                const address = document.getElementById("address").value;
+                const addressError = document.getElementById("full_address_error");
+                if (address === "") {
+                    addressError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else {
+                    addressError.textContent = "";
+                }
+    
+                // City validation
+                const city = document.getElementById("city").value;
+                const cityError = document.getElementById("city_error");
+                if (city === "") {
+                    cityError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else {
+                    cityError.textContent = "";
+                }
+    
+                // Place validation
+                const place = document.getElementById("place").value;
+                const placeError = document.getElementById("place_error");
+                if (place === "") {
+                    placeError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else {
+                    placeError.textContent = "";
+                }
+    
+                // Post validation
+                const post = document.getElementById("post").value;
+                const postError = document.getElementById("post_error");
+                if (post === "") {
+                    postError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else {
+                    postError.textContent = "";
+                }
+    
+                // Pin validation
+                const pin = document.getElementById("pin").value;
+                const pinError = document.getElementById("pin_error");
+                const pinPattern = /^[0-9]+$/;
+                if (pin === "") {
+                    pinError.textContent = "You can't leave this field blank.";
+                    isValid = false;
+                } else if (!pinPattern.test(pin)) {
+                    pinError.textContent = "Pin must contain only numbers.";
+                    isValid = false;
+                } else {
+                    pinError.textContent = "";
+                }
+    
+                return isValid;
+            }
+               {% comment %} // Set up international telephone input
+                var input = document.querySelector("#contact");
+                var iti = window.intlTelInput(input, {
+                    initialCountry: "in",
+                    separateDialCode: true,
+                    utilsScript: "{% static 'states/js/utils.js' %}"
+                });
+                input.addEventListener('countrychange', function() {
+                    var countryCode = iti.getSelectedCountryData().dialCode;
+                    input.value = "+" + countryCode + " " + input.value.replace(/^\+\d+\s*/, '');
+                 }); {% endcomment %}
+    
+        </script>
+
+    <!--================= Wrapper Start Here =================-->
+    <div class="react-wrapper">
+        <div class="react-wrapper-inner">  
+            <div class="react-login-page react-signup-page pt---20 pb---120">
+                <div class="container">
+                    <div class="row">                            
+                        <div class="col-lg-12">
+                            <div class="login-right-form">
+                                <form method="post" id="form"  action="{% url 'signupcomplete' %}?sid={{ member.id }}"  onsubmit="return validateForm()"  enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="login-top">
+                                        <h3>Complete Profile</h3>
+                                    </div>
+                                    <p>
+                                        <label>Guardian Name<span style="color: red;">*</span></label>
+                                        <input placeholder="Guardian Name"  type="text" id="gname" name="gname" >
+                                        <span id="guardian_name_error" class="error-message"></span>
+                                    </p>
+                                    
+                                    <p>
+                                        <label>Guardian/Secondary Contact No<span style="color: red;">*</span></label>
+                                        <input placeholder="Guardian Contact" type="tel" id="gcontact" name="gcontact" >
+                                        <span id="secondary_contact_error" class="error-message"></span>
+                                    </p> 
+                                     
+                                    <p>
+                                        <label>Whatsapp Number<span style="color: red;">*</span></label>
+                                        <input placeholder="Whatsapp Number" type="text" id="whatsapp" name="whatsapp" >
+                                        <span id="whatsapp_no_error" class="error-message"></span>
+                                    </p>
+
+                                    <p>
+                                        <label>Upload Photo<span style="color: red;">*</span></label>
+                                        <input type="file" id="image" name="image" required>
+                                        {% comment %} <span id="" class="error-message"></span> {% endcomment %}
+                                    </p> 
+
+                                    <p>
+                                        <label for="maritalstatus">Marital Status<span style="color: red;">*</span></label>
+                                        <select id="maritalstatus" name="maritalstatus" required>
+                                            <option value="" selected disabled hidden>Choose Marital Status</option>
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Divorced">Divorced</option>
+                                            <option value="Widowed">Widowed</option>
+                                        </select>
+                                        <span id="marital_status_error" class="error-message"></span>
+                                    </p>
+
+                                    <p>
+                                        <label for="category">Category<span style="color: red;">*</span></label>
+                                        <select id="category" name="category" required>
+                                            <option value="" selected disabled hidden>Choose Category</option>
+                                            <option value="SC">SC</option>  
+                                            <option value="ST">ST</option>  
+                                            <option value="OBC">OBC</option>  
+                                            <option value="OEC">OEC</option>  
+                                            <option value="General">General</option>  
+                                            <option value="BPL">BPL</option>
+                                            <span id="category_error" class="error-message"></span>
+                                        </select>
+                                    </p> 
+                                   
+                                    <p>
+                                        <label>Occupation</label>
+                                        <input placeholder="Occupation" type="text" id="occupation" name="occupation" required>
+                                        <span id="occupation_error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Flat No/Door No/House Name<span style="color: red;">*</span></label>
+                                        <input placeholder="Full Address" type="text" id="address" name="address" > 
+                                        <span id="full_address_error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>City<span style="color: red;">*</span></label>
+                                        <input placeholder="City" type="text" id="city" name="city" >
+                                        <span id="city_error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Place<span style="color: red;">*</span></label>
+                                        <input placeholder="Place" type="text" id="place" name="place" >
+                                        <span id="place_error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label for="district">District<span style="color: red;">*</span></label>
+                                        <select id="district" name="district" required>
+                                            <option value="" selected disabled hidden>Choose District</option>
+                                            <option value="Thiruvananthapuram">Thiruvananthapuram</option>  
+                                            <option value="Kollam"> Kollam</option>  
+                                            <option value="Alappuzha">Alappuzha</option>  
+                                            <option value="Pathanamthitta">Pathanamthitta</option>  
+                                            <option value="Kottayam"> Kottayam</option>  
+                                            <option value="Idukki"> Idukki</option>
+                                            <option value="Ernakulam">Ernakulam </option>
+                                            <option value="Thrissur"> Thrissur </option>
+                                            <option value="Palakkad">Palakkad </option>
+                                            <option value="Malappuram"> Malappuram </option>
+                                            <option value="Kozhikode">  Kozhikode</option>
+                                            <option value="Wayanad">  Wayanad</option>
+                                            <option value="Kannur">Kannur </option>
+                                            <option value="Kasaragod">Kasaragod </option>
+                                            <span id="" class="error-message"></span>
+                                        </select>
+                                    </p> 
+                                    <p>
+                                        <label>Post<span style="color: red;">*</span></label>
+                                        <input placeholder="Post" type="text" id="post" name="post" >
+                                        <span id="post_error" class="error-message"></span>
+                                    </p>
+                                    <p>
+                                        <label>Pin<span style="color: red;">*</span></label>
+                                        <input placeholder="Pin" type="text" id="pin" name="pin" >
+                                        <span id="pin_error" class="error-message"></span>
+                                    </p>
+
+                                    <div class="back-check-box">
+                                        <input type="checkbox" id="box-1">Remember me<em></em>
+                                        <p></p>
+                                    </div>
+                                    <button type="submit" id="button" name="submit">Update<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+                                    {% comment %} <span class="back-or"> ........ or Login with ........ </span> {% endcomment %}
+                                    {% comment %} <ul class="social-links">
+                                        <li><a href="#"><span aria-hidden="true" class="social_facebook"></span></a></li>
+                                        <li><a href="#"><span aria-hidden="true" class="social_twitter"></span></a></li>
+                                    </ul> {% endcomment %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <!--================= Wrapper End Here =================-->
+</body>
+</html>
+<footer id="react-footer" class="react-footer react-footer-two pt---120">
+    <div class="footer-top">
+        {% comment %} <div class="container">
+            <div class="footer-top-cta">
+                <div class="row">
+                    <div class="col-lg-7">
+                     
+                        <h4>Free Online Course</h4>
+                        <h3>Ready to dive in? <br> Start your free Course today.</h3>
+                        {% comment %} <img src="{% static 'states/images/cta.jpg' %}" alt="logo" class="footer-top-cta"></a> {% endcomment %}
+                    {% comment %} </div>
+                    <div class="col-lg-5 text-right">
+                        <a href="#">Go To FAQ <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-1">
+                        <div class="footer-logo white">
+                            <a href="index.html" class="logo-text"> <img src="{% static 'states/images/footer-logo2.png' %}" alt="logo"></a>
+                        </div>
+                        <h5 class="footer-subtitle">There are course and event custom <br>
+                        post types so you can easily create and<br> manage course, events.</h5>
+                        <ul class="footer-address">
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><a href="tel:+(402)76244183"> +(402) 762 441 83 </a></li>
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><a href="mailto:info@yourdmain.com"> info@echooling.com </a></li>
+                        </ul>                               
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-2">
+                        <h3 class="footer-title">About Us</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="coureses-grid.html">Courses</a></li>
+                                <li><a href="#">Events</a></li>
+                                <li><a href="#">Career</a></li>
+                                <li><a href="profile.html">Become a Teacher</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-3">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="#">Browse Library</a></li>
+                                <li><a href="#">Library</a></li>
+                                <li><a href="#">Partners</a></li>
+                                <li><a href="blog.html">News & Blog</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget footer-widget-4">
+                        <h3 class="footer-title">Newsletter</h3> 
+                        <div class="footer3__form">
+                            <p>Get the latest Echooling news <br>delivered to you inbox</p>
+                            <form action="#">
+                                <input type="email" placeholder="Enter your email">
+                                <button class="footer3__form-1">
+                                    <i class="arrow_right"></i>
+                                </button>
+                            </form>
+                        </div>                                                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="copyright">  
+        <div class="container">                  
+            <div class="react-copy-left">© 2022 <a href="#">Echooling.</a> All Rights Reserved</div>
+            <div class="react-copy-right">
+                <ul class="social-links">
+                    <li class="follow">Follow us</li>
+                    <li><a href="#"><span aria-hidden="true" class="social_facebook"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_twitter"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_linkedin"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!--================= Jquery latest version =================-->
+    <script src="{% static 'states/js/jquery.min.js' %}"></script>
+    <!--================= Modernizr js =================-->
+    <script src="{% static 'states/js/modernizr-2.8.3.min.js' %}"></script>
+    <!--================= Bootstrap js =================-->
+    <script src="{% static 'states/js/bootstrap.min.js' %}"></script>
+    <!--================= Owl Carousel js =================-->
+    <script src="{% static 'states/js/owl.carousel.min.js' %}"></script>
+    <!--================= Magnific Popup =================-->
+    <script src="{% static 'states/js/jquery.magnific-popup.min.js' %}"></script>
+    <!--================= Counter up js =================-->
+    <script src="{% static 'states/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'states/js/waypoints.min.js' %}"></script>
+    <!--================= Wow js =================-->
+    <script src="{% static 'states/js/wow.min.js' %}"></script>     
+    <script src="{% static 'states/js/isotope.pkgd.min.js' %}"></script>
+    <!--================= Imagesloaded.pkgd.min js =================-->
+    <script src="{% static 'states/js/imagesloaded.pkgd.min.js' %}"></script>            
+    <!--================= menus js =================-->
+    <script src="{% static 'states/js/menus.js' %}"></script>
+    <!--================= Plugins js =================-->
+    <script src="{% static 'states/js/plugins.js' %}"></script>       
+	<!--================= Main js =================-->
+    <script src="{% static 'states/js/main.js' %}"></script>
+

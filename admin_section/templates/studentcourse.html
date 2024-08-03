@@ -1,0 +1,272 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+      $("#duration").change(function(){
+        var selectedOption = $(this).val();
+        if(selectedOption !== 'Weeks' && selectedOption !== 'Days' && selectedOption !== 'Months' && selectedOption !== 'Years') {
+          $("#unitBox").hide();
+        } else {
+          $("#unitBox").show();
+        }
+      });
+    });
+ 
+    $(document).ready(function() {
+      $('#numberOfInstallments').change(function() {
+        var numberOfInstallments = $(this).val();
+        var html = '<table class="table">';
+        html += '<thead>';
+        html += '<tr>';
+        html += '<th scope="col">Installment Order</th>';
+        html += '<th scope="col">Installment Amount</th>'; // Added column for Installment Amount
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+        for (var i = 1; i <= numberOfInstallments; i++) {
+          html += '<tr>';
+          html += '<td>' + i + '</td>';
+          html += '<td><input type="text" class="form-control installmentAmount" id="installmentAmount_' + i + '" name="installmentAmount_' + i + '"></td>';
+          html += '</tr>';
+        }
+        html += '</tbody>';
+        html += '</table>';
+        $('#installmentTables').html(html); 
+      });
+    });
+
+
+//image preview//
+$(document).ready(function() {
+    $('#imgInput').change(function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+            var dataURL = reader.result;
+            $('#imgPreview').attr('src', dataURL);
+        };
+        reader.readAsDataURL(input.files[0]);
+    });
+});
+
+
+
+$(document).ready(function() {
+  function updateTotal() {
+      var admission = parseInt($('input[name="admission"]').val()) || 0;
+      var center = parseInt($('input[name="center"]').val()) || 0;
+      var affiliation = parseInt($('input[name="affiliation"]').val()) || 0;
+      var other = parseInt($('input[name="other"]').val()) || 0;
+      var total = admission + center + affiliation + other;
+      $('input[name="total"]').val(total);
+  }
+
+  $('input[name="admission"], input[name="center"], input[name="affiliation"], input[name="other"]').on('input', function() {
+      updateTotal();
+  });
+
+  $("#duration").change(function(){
+      var selectedOption = $(this).val();
+      if(selectedOption !== 'Weeks' && selectedOption !== 'Days' && selectedOption !== 'Months' && selectedOption !== 'Years') {
+        $("#unitBox").hide();
+      } else {
+        $("#unitBox").show();
+      }
+  });
+
+  $('#numberOfInstallments').change(function() {
+      var numberOfInstallments = $(this).val();
+      var html = '<table class="table">';
+      html += '<thead>';
+      html += '<tr>';
+      html += '<th scope="col">Installment Order</th>';
+      html += '<th scope="col">Installment Amount</th>'; // Added column for Installment Amount
+      html += '</tr>';
+      html += '</thead>';
+      html += '<tbody>';
+      for (var i = 1; i <= numberOfInstallments; i++) {
+          html += '<tr>';
+          html += '<td>' + i + '</td>';
+          html += '<td><input type="text" class="form-control installmentAmount" id="installmentAmount_' + i + '" name="installmentAmount_' + i + '"></td>';
+          html += '</tr>';
+      }
+      html += '</tbody>';
+      html += '</table>';
+      $('#installmentTables').html(html);
+  });
+
+  $('#imgInput').change(function(event) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function() {
+          var dataURL = reader.result;
+          $('#imgPreview').attr('src', dataURL);
+      };
+      reader.readAsDataURL(input.files[0]);
+  });
+});
+</script>
+
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1><b>Student Course Details</b></h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-11">
+
+          <div class="card">
+            <div class="card-body" style="padding:20px;,back-ground color:black;">
+              <!-- General Form Elements -->
+              <form method="post" id="form" action="stdcourse" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title">Course Details</h5>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="course" class="label">Course Name</label>
+                            <input name="course" type="text" class="form-control">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="code" class="label">Course Code</label>
+                            <input name="code" type="text" class="form-control">
+                        </div>
+                    </div>
+                  
+
+                    <div class="row mb-3">
+                      <div class="col-sm-6 mb-3">
+                          <label for="image" class="label">Course Image</label>
+                          <input id="imgInput" name="image" type="file" class="form-control" onchange="previewImage(event)">
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                          <label for="desc" class="label">Preview</label>
+                          <img id="imgPreview" src=""style="max-width: 200px; max-height: 200px;" class="profile-img rounded-circle">
+                      </div>
+                  </div>
+
+                   <div class="row mb-3">
+                      <div class="col-sm-12 mb-3">
+                        <label for="desc" class="label">Course Description</label>
+                        <textarea name="course_desc" type="text" class="form-control"></textarea>
+                      </div>
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                      <div class="col-sm-6 mb-3">
+                          <label for="certificate" class="label">Certification</label> 
+                          <select id="certificate" name="certificate" class="form-control">
+                              <option value=""selected disabled hidden>Choose Certification</option>
+                              {% for i in addcertificates %}
+                                  <option value="{{i.id}}">{{ i.certificateadd}}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                          <label for="coursetype" class="label">Course Type</label>  
+                          <select id="coursetype" name="coursetype" class="form-control">
+                            <option value=""selected disabled hidden>Choose Course Type</option>
+                            {% for i in addcoursetypes %}
+                                <option value="{{i.id}}">{{ i.coursetypeadd}}</option>
+                            {% endfor %}
+                          </select> 
+                      </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-sm-6 mb-3">
+                      <label for="category" class="label">Course Category</label>  
+                      <select id="category" name="category" class="form-control">
+                        <option value=""selected disabled hidden>Choose Course Category</option>
+                        {% for i in category %}
+                            <option value="{{i.id}}">{{ i.categoryadd}}</option>
+                        {% endfor %}
+                      </select> 
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label for="duration" class="label">Duration</label> 
+                       <select id="duration" name="duration" class="form-control">
+                        <option value=""selected disabled hidden>Choose Duration</option>
+                        {% for i in add_duration %}
+                            <option value="{{i.id}}">{{ i.durationadd}}</option>
+                        {% endfor %}
+                     </select>
+                   </div>
+               </div>
+        
+                  
+                       <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                          <label for="durationdigit" class="label">Enter Duration In Digits </label>
+                          <input name="durationdigit" type="text" class="form-control">
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                        <label for="qualification" class="label">Qualification</label>
+                        <input type="text" name="qualification" class="form-control" >
+                    </div>
+                       </div>
+                       
+                   
+                    <div class="row mb-3">
+                      <div class="col-sm-6 mb-3">
+                        <label for="hours" class="label">Total Hours</label>
+                        <input name="hours" type="text" class="form-control">
+                     </div>
+                     <div class="col-sm-6 mb-3">
+                      <label for="admission" class="label">Admission Fee</label>
+                      <input type="text" name="admission" class="form-control" >
+                  </div>
+                   </div>
+            
+                    <div class="row mb-3">
+                      <div class="col-sm-6 mb-3">
+                        <label for="center" class="label">Center Fee</label>
+                        <input name="center" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label for="affiliation" class="label">Affiliation Fee</label>
+                             <input name="affiliation" type="text" class="form-control" >
+                         </div>
+                </div>
+
+                    <div class="row mb-3">
+                      <div class="col-sm-6 mb-3">
+                        <label for="other" class="label">Other Fee</label>
+                        <input name="other" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label for="total" class="label">Total Fee</label>
+                      <input name="total" type="text" class="form-control" readonly>
+                  </div>
+                    </div>         
+                  <div class="row mb-3">
+                    <div class="col-sm-6 mb-3">
+                      <label for="installment_no" class="label">Number of Installments</label>
+                      <input type="number" id="numberOfInstallments" name="installment_no" class="form-control">
+                    </div>
+                    <div id="installmentTables">
+                    </div>
+                  </div>
+                 
+                             <div class="row mb-3">
+                                 <div class="col-sm-10">
+                                 <button type="submit" id="form-submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                </form> 
+                
+  </main>
+</html>
+{% include 'footer.html' %}

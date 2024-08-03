@@ -1,0 +1,429 @@
+{% load static %}
+{% include 'mainheader.html' %}
+
+<style>
+        /* Style the modal */
+        .modal {
+          display: none; 
+          position: fixed; 
+          z-index: 1; 
+          left: 0;
+          top: 0;
+          width: 100%; 
+          height: 100%; 
+          overflow: auto; 
+          background-color: rgb(0,0,0); 
+          background-color: rgba(0,0,0,0.4); 
+          padding-top: 60px;
+        }
+      
+        /* Modal Content */
+        .modal-content {
+          background-color: #fefefe;
+          margin: 5% auto; 
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%; 
+          max-width: 500px;
+          text-align: center;
+        }
+      
+        /* The Close Button */
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+      
+        .close:hover,
+        .close:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
+      
+        h4 {
+          margin: 0 0 20px 0;
+        }
+      
+        /* Box for profile completion */
+        .profile-box {
+          width: 1200px;
+          margin: 50px auto;
+          padding: 5px;
+          border: 2px solid black;
+          text-align: center;
+          background-color: #f0f0f0;
+          cursor: pointer;
+        }
+      
+        .profile-box:hover {
+          background-color: #e0e0e0;
+        }
+        .case-img {
+            position: relative;
+            overflow: hidden;
+            height: 240px; /* Set a fixed height for the container */
+        }
+        
+        .case-img img {
+            height: 100%;
+            width: auto;
+            display: block;
+            margin: 0 auto; /* Center the image horizontally */
+            inset: 0px;
+            color: transparent;
+        }
+        /* Initially hide the profileBox */
+        #profileBox {
+        display: none;
+        }
+        
+      
+</style>
+<script src="{% static 'states/js/jquery-3.6.0.min.js' %}"></script>
+
+<script>
+    
+
+ {% comment %} function applyNow(studentId, courseId) {
+    // First, check if the student's profile is complete
+    $.ajax({
+        url: `/check_profile_status/${studentId}/`,  // Adjust the URL to point to the profile status check endpoint
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            if (response.is_complete === 0) {
+                alert('You must complete your profile before applying for a course.');
+            } else {
+                // If profile is complete, proceed with the application
+                $.ajax({
+                    url: `/course_detail/${studentId}/${courseId}/`,  // Dynamically construct the URL
+                    type: 'POST',
+                    data: {
+                        'applied_by': 1,  // Example applied_by (replace with actual value if needed)
+                        'payment_id': 1,  // Example payment_id (replace with actual value if needed)
+                    },
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        $('#apply-btn-' + courseId).text('Applied').attr('disabled', true);
+                        alert(response.message);
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Application failed: ' + xhr.responseJSON.error);
+                    }
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Failed to check profile status: ' + xhr.responseJSON.error);
+        }
+    });
+} {% endcomment %}
+
+
+
+
+
+    {% comment %} document.addEventListener("DOMContentLoaded", function() {
+        var button = document.getElementById("profile-complete-button");
+        //alert("You must Complete Profile given below");
+
+        // Retrieve the is_complete value from the JSON script
+        var isComplete ={{is_complete}};
+        console.log(isComplete);
+        //alert(isComplete)
+    
+        // Check if isComplete is 0
+        if (isComplete === 0) {
+            button.style.display = "block";
+        } else {
+            button.style.display = "none";
+        }
+    }); {% endcomment %}
+</script>
+
+        <!--================= Wrapper Start Here =================-->
+        <div class="react-wrapper">
+            <div class="react-wrapper-inner">
+                <!--================= Breadcrumbs Section Start Here =================-->
+                <div class="react-breadcrumbs">
+                    <div class="breadcrumbs-wrap">
+                        <img class="desktop" src="{% static 'states/images/breadcrumbs/1.jpg' %}" alt="Breadcrumbs">
+                        <img class="mobile" src="{% static 'states/images/breadcrumbs/1.jpg' %}" alt="Breadcrumbs">
+                        <div class="breadcrumbs-inner">
+                            <div class="container">
+                                <div class="breadcrumbs-text">
+                                    <h1 class="breadcrumbs-title">Course Grid</h1>
+                                    <div class="back-nav">
+                                        <ul>
+                                            <li><a href="index.html">Home</a></li>
+                                            <li>Course Grid</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                </div>
+                <!--================= Breadcrumbs Section End Here =================-->
+              
+           
+                
+                {% comment %} <input type="number" value="{{student.id}}">
+                <input type="number" value="{{course.id}}"> {% endcomment %}
+                {% comment %} <p>Course ID: {{ courseid.id }}</p> {% endcomment %}
+              
+                           {% comment %} <h4 style="color:rgb(255,255,255);color:rgb(255,255,255); text-decoration-line:none; font-family: 'Source Sans Pro', sans-serif; font-weight:700; font-size:24px;"> <br>Did you Complete Profile?</h4>  {% endcomment %}
+                        {% comment %} <button type="button" class="btn-btn" id="profile-complete-button">
+                            {% if request.session.sid %}
+                                <a href="../../../signupcomplete?sid={{ request.session.sid }}">Click Here To Complete Profile</a>
+                            {% endif %}
+                        </button> {% endcomment %}
+                            <!-- Including the JSON script for is_complete -->
+   
+
+                <!--================= Course Filter Section Start Here =================-->
+                <div class="react-course-filter back__course__page_grid pb---40 pt---110">
+                    <div class="container pb---70"> 
+                        <div class="row align-items-center back-vertical-middle shorting__course mb-50">
+                            <div class="col-md-2">
+                                <div class="all__icons">                                    
+                                    <div class="list__icons">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                                    </div>
+                                    <div class="result-count">Filters</div>
+                                </div>
+                            </div>
+                            <div class="col-md-10 text-right">
+                                <select class="from-control">
+                                    <option>All Categories</option>
+                                    <option>Sort by popularity</option>
+                                    <option>Sort by average rating</option>
+                                    <option>Sort by lates</option>
+                                    <option>Sort by price: low to high</option>
+                                    <option>Sort by price: high to low</option>
+                                </select>
+                                <select class="from-control">
+                                    <option>All Language</option>
+                                    <option>Sort by popularity</option>
+                                    <option>Sort by average rating</option>
+                                    <option>Sort by lates</option>
+                                    <option>Sort by price: low to high</option>
+                                    <option>Sort by price: high to low</option>
+                                </select>
+                                <select class="from-control">
+                                    <option>All Prices</option>
+                                    <option>Sort by popularity</option>
+                                    <option>Sort by average rating</option>
+                                    <option>Sort by lates</option>
+                                    <option>Sort by price: low to high</option>
+                                    <option>Sort by price: high to low</option>
+                                </select>
+                                <select class="from-control">
+                                    <option>All Skills</option>
+                                    <option>Sort by popularity</option>
+                                    <option>Sort by average rating</option>
+                                    <option>Sort by lates</option>
+                                    <option>Sort by price: low to high</option>
+                                    <option>Sort by price: high to low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row align-items-center back-vertical-middle shorting__course2 mb-50">
+                            <div class="col-md-6">
+                                <div class="all__icons">                                   
+                                    <div class="result-count">We found 104 courses available for you</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-right">                                
+                                <select class="from-control">
+                                    <option>Sort by: Default</option>
+                                    <option>Sort by popularity</option>
+                                    <option>Sort by average rating</option>
+                                    <option>Sort by lates</option>
+                                    <option>Sort by price: low to high</option>
+                                    <option>Sort by price: high to low</option>
+                                </select>
+                            </div>
+                        </div>                                                  
+                        <div class="row">   
+                            {% for i in course %}                   
+                            <div class="single-studies col-lg-4 grid-item">
+                                <div class="inner-course">
+                                    <div class="case-img">
+                                       <a href="#" class="cate-w"><img src="{% static 'states/images/course/beg.png' %}" alt="Beginner"> Beginner</a>
+                                       <img src="../../../media/{{i.image}}" alt="Course Image" class="img-course" >
+                                    </div>
+                                    <div class="case-content">                              
+                                      
+                                        <h4 class="case-title">{{ i.course }}</a></h4>
+
+                                        
+                                        <ul class="meta-course">
+                                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>{{i.duration}}</li>
+                                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>{{i.hours}}</li>
+                                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>{{i.total}}</li>
+                                        </ul>
+                                      
+                                    
+                                        <ul class="react-ratings">
+                                            <li class="react-book"> 
+                                                <!--<button style="font-size: 14px;font-weight:600;background:#3270fc;padding:4px 9px 7px;color:#fff;border-radius: 5px;border:none;" 
+                                                id="apply-now-btn" onclick="applyNow({{ student.id }}, {{ i.id }})">Apply Now</button>-->
+                                              
+                                                
+                                                <a href="loginmain" style="font-size: 14px; font-weight: 600; background: #3270fc; padding: 4px 9px 7px; color: #fff; border-radius: 5px; border: none; text-decoration: none; display: inline-block;">Apply Now</a>
+
+                                 
+                                               
+                                            </li>
+                                            <li class="price">{{i.code}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        <!--================= Pagination Section Start Here =================-->
+                        <ul class="back-pagination pt---20">
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li class="back-next"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></li>
+                        </ul>
+                        <!--================= Pagination Section End Here =================-->
+                    </div>
+                </div>
+                <!--================= Course Filter Section End Here =================--> 
+                
+            </div>
+        </div>
+        <!--================= Wrapper End Here =================-->
+    </body>
+</html>
+<footer id="react-footer" class="react-footer react-footer-two pt---120">
+    <div class="footer-top">
+        {% comment %} <div class="container">
+            <div class="footer-top-cta">
+                <div class="row">
+                    <div class="col-lg-7">
+                     
+                        <h4>Free Online Course</h4>
+                        <h3>Ready to dive in? <br> Start your free Course today.</h3>
+                        {% comment %} <img src="{% static 'states/images/cta.jpg' %}" alt="logo" class="footer-top-cta"></a> {% endcomment %}
+                    {% comment %} </div>
+                    <div class="col-lg-5 text-right">
+                        <a href="#">Go To FAQ <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-1">
+                        <div class="footer-logo white">
+                            <a href="index.html" class="logo-text"> <img src="{% static 'states/images/footer-logo2.png' %}" alt="logo"></a>
+                        </div>
+                        <h5 class="footer-subtitle">There are course and event custom <br>
+                        post types so you can easily create and<br> manage course, events.</h5>
+                        <ul class="footer-address">
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><a href="tel:+(402)76244183"> +(402) 762 441 83 </a></li>
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><a href="mailto:info@yourdmain.com"> info@echooling.com </a></li>
+                        </ul>                               
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-2">
+                        <h3 class="footer-title">About Us</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="coureses-grid.html">Courses</a></li>
+                                <li><a href="#">Events</a></li>
+                                <li><a href="#">Career</a></li>
+                                <li><a href="profile.html">Become a Teacher</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 md-mb-30">
+                    <div class="footer-widget footer-widget-3">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="#">Browse Library</a></li>
+                                <li><a href="#">Library</a></li>
+                                <li><a href="#">Partners</a></li>
+                                <li><a href="blog.html">News & Blog</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget footer-widget-4">
+                        <h3 class="footer-title">Newsletter</h3> 
+                        <div class="footer3__form">
+                            <p>Get the latest Echooling news <br>delivered to you inbox</p>
+                            <form action="#">
+                                <input type="email" placeholder="Enter your email">
+                                <button class="footer3__form-1">
+                                    <i class="arrow_right"></i>
+                                </button>
+                            </form>
+                        </div>                                                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="copyright">  
+        <div class="container">                  
+            <div class="react-copy-left">© 2022 <a href="#">Echooling.</a> All Rights Reserved</div>
+            <div class="react-copy-right">
+                <ul class="social-links">
+                    <li class="follow">Follow us</li>
+                    <li><a href="#"><span aria-hidden="true" class="social_facebook"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_twitter"></span></a></li>
+                    <li><a href="#"><span aria-hidden="true" class="social_linkedin"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!--================= Jquery latest version =================-->
+    <script src="{% static 'states/js/jquery.min.js' %}"></script>
+    <!--================= Modernizr js =================-->
+    <script src="{% static 'states/js/modernizr-2.8.3.min.js' %}"></script>
+    <!--================= Bootstrap js =================-->
+    <script src="{% static 'states/js/bootstrap.min.js' %}"></script>
+    <!--================= Owl Carousel js =================-->
+    <script src="{% static 'states/js/owl.carousel.min.js' %}"></script>
+    <!--================= Magnific Popup =================-->
+    <script src="{% static 'states/js/jquery.magnific-popup.min.js' %}"></script>
+    <!--================= Counter up js =================-->
+    <script src="{% static 'states/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'states/js/waypoints.min.js' %}"></script>
+    <!--================= Wow js =================-->
+    <script src="{% static 'states/js/wow.min.js' %}"></script>     
+    <script src="{% static 'states/js/isotope.pkgd.min.js' %}"></script>
+    <!--================= Imagesloaded.pkgd.min js =================-->
+    <script src="{% static 'states/js/imagesloaded.pkgd.min.js' %}"></script>            
+    <!--================= menus js =================-->
+    <script src="{% static 'states/js/menus.js' %}"></script>
+    <!--================= Plugins js =================-->
+    <script src="{% static 'states/js/plugins.js' %}"></script>       
+	<!--================= Main js =================-->
+    <script src="{% static 'states/js/main.js' %}"></script>
+

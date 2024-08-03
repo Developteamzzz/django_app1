@@ -1,0 +1,270 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    .label{
+        font-size: 16px;
+        font-family:Arial;
+        font-weight: 450;
+    }
+</style>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the date input field
+        var dobInput = document.getElementById('dob');
+    
+        // Get the date in the DD-MM-YYYY format
+        var dateValue = '20-04-2001';
+    
+        // Convert date to YYYY-MM-DD format
+        var parts = dateValue.split('-');
+        var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+    
+        // Set the value of the date input field
+        dobInput.value = formattedDate;
+    });
+
+//image preview
+$(document).ready(function() {
+    $('#image').change(function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+            var dataURL = reader.result;
+            $('#imgPreview').attr('src', dataURL);
+        };
+        reader.readAsDataURL(input.files[0]);
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('dob').addEventListener('change', function() {
+        const dob = new Date(this.value);
+        const age = calculateAge(dob);
+        document.getElementById('age').value = age;
+    });
+
+    function calculateAge(dob) {
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age;
+    }
+});
+</script>
+<body>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1><b>Student Registration Form</b></h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-11">
+
+          <div class="card">
+            <div class="card-body" style="padding:20px;,back-ground color:black;">
+              <!-- General Form Elements -->
+              <form method="post" id="form" action="reg" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title">Student Personal Information</h5>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="firstname" class="label">First Name<small><!--(Asper School Certificate)--></small></label>
+                            <input name="firstname" type="text" class="form-control">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="lastname" class="label">Last Name</label>
+                            <input id="lastname" name="lastname" type="text"  class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <input id="dob" name="dob" type="date" class="form-control">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input id="age" name="age" type="text" class="form-control" readonly>
+                        </div>
+    
+                    </div>
+                  
+
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label class="label">Gender</label>
+                            <div>
+                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value1" value="Male" >
+                                    <label class="form-check-label" for="Male">Male</label>
+                                 </div>
+                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value2" value="Female">
+                                    <label class="form-check-label" for="Female">Female</label>
+                                 </div>
+                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="value3" value="Others" >
+                                    <label class="form-check-label" for="Others">Others</label>
+                                 </div>
+                            </div>
+                        </div>
+                           <div class="col-sm-6 mb-3">
+                              <label for="email" class="label">Email</label>
+                              <input name="email" type="email" class="form-control" >
+                           </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="contact" class="label">Contact No</label>
+                            <input type="text" name="contact" class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="whatsapp" class="label">Whatsapp</label>
+                            <input type="text" name="whatsapp" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="maritalstatus" class="label">Marital Status</label>  
+                            <select id="maritalstatus" name="maritalstatus" class="form-control">
+                                <option value="maritalstatus" selected disabled hidden >Choose Marital Status</option> 
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>  
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="qualification" class="label">Qualification</label>
+                            <input type="text" name="qualification" class="form-control" >
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="category" class="label">Category</label>
+                            <select id="category" name="category" class="form-control">
+                                <option value="category" selected disabled hidden>Choose Category</option> 
+                                <option>SC</option>  
+                                <option> ST </option>  
+                                <option> OBC</option>  
+                                <option> OEC </option>  
+                                <option> General </option>  
+                                <option> BPL </option>
+                            </select>  
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="occupation" class="label">Occupation</label>
+                            <input name="occupation" type="text" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="image" class="label">Upload Photo</label>
+                            <input name="image" class="form-control" type="file" id="image">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                             <label for="imgPreview" class="label">Preview </label>
+                            <img id="imgPreview" src="" style="max-width: 200px; max-height: 200px;" class="profile-img rounded-circle">
+                        </div>
+                    </div>
+
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title"> ADDRESS </h5>
+                        </div>
+                   
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="address" class="label">Flat No/Door No/House Name</label>
+                            <input name="address" type="text" class="form-control" >
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="city" class="label">City</label>
+                            <input name="city" type="text" class="form-control">
+                        </div>
+                      </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="place" class="label">Place</label>
+                            <input type="text" name="place" class="form-control" >
+                        </div>
+
+                        <div class="col-sm-6 mb-3">
+                            <label for="district" class="label">District</label>
+                            <select id="district" name="district" class="form-control">
+                                <option value="district" selected disabled hidden>Choose District</option> 
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>  
+                                <option value="Kollam"> Kollam</option>  
+                                <option value="Alappuzha">Alappuzha</option>  
+                                <option value="Pathanamthitta">Pathanamthitta</option>  
+                                <option value="Kottayam"> Kottayam</option>  
+                                <option value="Idukki"> Idukki</option>
+                                <option value="Ernakulam">Ernakulam </option>
+                                <option value="Thrissur"> Thrissur </option>
+                                <option value="Palakkad">Palakkad </option>
+                                <option value="Malappuram"> Malappuram </option>
+                                <option value="Kozhikode">  Kozhikode</option>
+                                <option value="Wayanad">  Wayanad</option>
+                                <option value="Kannur">Kannur </option>
+                                <option value="Kasaragod">Kasaragod </option>
+                            </select>  
+                        </div>
+                    </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6 mb-3">
+                                <label for="post" class="label">Post Office</label>
+                                <input type="text" name="post" class="form-control" >
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="pin" class="label">Pin Code</label>
+                                <input type="text" name="pin" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-sm-6 mb-3">
+                              <label for="guardianname" class="label">Guardian Name</label>
+                              <input type="text" name="gname" class="form-control">
+                          </div>
+                          <div class="col-sm-6 mb-3">
+                              <label for="guardiancontact" class="label">Guardian Contact Number</label>
+                              <input type="text" name="gcontact" class="form-control">
+                          </div>
+                      </div>
+            
+                             <div class="row mb-3">
+                                 <div class="col-sm-10">
+                                 <button type="submit" id="form-submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                </form> 
+                 
+  </main><!-- End #main -->
+</body>
+</html>
+{% include 'footer.html' %}

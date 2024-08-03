@@ -1,0 +1,154 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <main id="main" class="main">
+
+<style>
+    .previous {
+        color: black;
+      }     
+</style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          var courseSelect = document.getElementById('course');
+          var durationInput = document.getElementsByName('duration')[0];
+          var hoursInput = document.getElementsByName('hours')[0];
+      
+          courseSelect.addEventListener('change', function() {
+              var selectedCourse = this.value;
+              if (selectedCourse) {
+                  fetch('/get_course_details/' + selectedCourse)
+                      .then(response => response.json())
+                      .then(data => {
+                          durationInput.value = data.duration;
+                          hoursInput.value = data.hours;
+                      });
+              } else {
+                  durationInput.value = '';
+                  hoursInput.value = '';
+              }
+          });
+      });
+      </script>
+      
+
+    <div class="pagetitle">
+      <h1><b>Update Batch</b></h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a href="../../viewbatch" class="previous">&laquo; <b>Previous</b></a>
+        </li>
+      </ul> 
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-11">
+
+          <div class="card">
+            <div class="card-body" style="padding:20px;,back-ground color:black;">
+              <!-- General Form Elements -->
+              <form method="post" id="form" action="{% url 'update_batch' id=member.id %}" >
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title">Batch Details</h5>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8 mb-3">
+                          <label for="course" class="label">Course Name</label>  
+                          <select id="course" name="course" class="form-control">
+                           
+                            <option value="" selected disabled hidden>{{current_course_name}}</option>
+                          
+                            {% for i in course %}
+                            <option value="{{ i.id }}" {% if member.course == i.course %}selected{% endif %}>{{ i.course}}</option>
+                            {% endfor %}
+                          </select>  
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">    
+                        <div class="col-sm-8 mb-3">
+                          <label for="duration" class="label">Duration</label>
+                          <input name="duration" type="text" value="{{member.duration}}"  class="form-control">
+                        </div>
+                  </div>
+                    
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                          <label for="hours" class="label">Total Hours</label> 
+                          <input name="hours" type="text" value="{{member.hours}}"class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                        <label for="title" class="label">Batch Title</label>
+                        <input name="title" type="text" value="{{member.title}}" class="form-control">
+                      </div>
+                    </div>
+                  
+          
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                          <label class="label">Select Days</label>
+                          <div class="d-flex flex-wrap">
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value1" value="Sun" {% if 'Sun' in member.days %} checked{% endif %}>
+                                  <label class="form-check-label" for="value1">Sun</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value2" value="Mon"  {% if 'Mon' in member.days %} checked{% endif %}>
+                                  <label class="form-check-label" for="value2">Mon</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value3" value="Tue" {% if 'Tue' in member.days %} checked{% endif %}>
+                                  <label class="form-check-label" for="value3">Tue</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value4" value="Wed"  {% if 'Wed' in member.days %} checked{% endif %}>
+                                  <label class="form-check-label" for="value4">Wed</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value5" value="Thu" {% if 'Thu' in member.days %} checked{% endif %}>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="value6" value="Fri" {% if 'Fri' in member.days %} checked{% endif %}>
+                                  <label class="form-check-label" for="value6">Fri</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="days" id="value7" value="Sat" {% if 'Sat' in member.days %} checked{% endif %}>
+                                <label class="form-check-label" for="value7">Sat</label>
+                            </div>
+                  
+                  
+                          <!-- Include other day checkboxes here -->
+                      </div>
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <div class="col-sm-8 mb-3">
+                      <label for="daily_hours" class="label">Daily Hours</label>
+                      <input name="daily_hours" type="text" value="{{member.daily_hours}}" class="form-control">
+                  </div>
+                </div>
+              
+                       
+                   
+                         <div class="row mb-3">
+                                 <div class="col-sm-10">
+                                 <button type="submit" id="form-submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                </form> 
+                
+  </main>
+</html>
+{% include 'footer.html' %}

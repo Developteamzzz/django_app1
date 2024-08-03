@@ -1,0 +1,140 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <main id="main" class="main">
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          var courseSelect = document.getElementById('course');
+          var durationInput = document.getElementsByName('duration')[0];
+          var hoursInput = document.getElementsByName('hours')[0];
+      
+          courseSelect.addEventListener('change', function() {
+              var selectedCourse = this.value;
+              if (selectedCourse) {
+                  fetch('/get_course_details/' + selectedCourse)
+                      .then(response => response.json())
+                      .then(data => {
+                          durationInput.value = data.duration;
+                          hoursInput.value = data.hours;
+                      });
+              } else {
+                  durationInput.value = '';
+                  hoursInput.value = '';
+              }
+          });
+      });
+      </script>
+      
+
+    <div class="pagetitle">
+      <h1><b>Course Batch</b></h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-11">
+
+          <div class="card">
+            <div class="card-body" style="padding:20px;,back-ground color:black;">
+              <!-- General Form Elements -->
+              <form method="post" id="form" action="batch" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h5 class="card-title">Add Batch </h5>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8 mb-3">
+                          <label for="course" class="label">Course Name</label>  
+                          <select id="course" name="course" class="form-control">
+                              <option value=""selected disabled hidden>Choose Course</option>
+                              {% for i in course %}
+                                  <option value="{{i.id}}">{{ i.course}}</option>
+                              {% endfor %}
+                          </select>  
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">    
+                        <div class="col-sm-8 mb-3">
+                          <label for="duration" class="label">Duration</label>
+                          <input name="duration" type="text"  class="form-control">
+                        </div>
+                  </div>
+                    
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                          <label for="hours" class="label">Total Hours</label> 
+                          <input name="hours" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                        <label for="title" class="label">Batch Title</label>
+                        <input name="title" type="text" class="form-control">
+                      </div>
+                    </div>
+                  
+                    <div class="row mb-3">
+                      <div class="col-sm-8 mb-3">
+                          <label class="label">Select Days</label>
+                          <div class="d-flex flex-wrap">
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_sunday" value="Sun">
+                                  <label class="form-check-label" for="day_sunday">Sun</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_monday" value="Mon">
+                                  <label class="form-check-label" for="day_monday">Mon</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_tuesday" value="Tue">
+                                  <label class="form-check-label" for="day_tuesday">Tue</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_wednesday" value="Wed">
+                                  <label class="form-check-label" for="day_wednesday">Wed</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_thursday" value="Thu">
+                                  <label class="form-check-label" for="day_thursday">Thu</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_friday" value="Fri">
+                                  <label class="form-check-label" for="day_friday">Fri</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="checkbox" name="days" id="day_saturday" value="Sat">
+                                  <label class="form-check-label" for="day_saturday">Sat</label>
+                              </div>
+                          <!-- Include other day checkboxes here -->
+                      </div>
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <div class="col-sm-8 mb-3">
+                      <label for="daily_hours" class="label">Daily Hours</label>
+                      <input name="daily_hours" type="text" class="form-control">
+                  </div>
+                </div>
+              
+                       
+                   
+                         <div class="row mb-3">
+                                 <div class="col-sm-10">
+                                 <button type="submit" id="form-submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                </form> 
+                
+  </main>
+</html>
+{% include 'footer.html' %}

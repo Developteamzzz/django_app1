@@ -1,0 +1,168 @@
+{% load static %}
+{% include 'header.html' %}
+<style>
+  td{
+    font-size: 16px;
+    font-family:Arial;
+    font-weight: 450;
+  }
+  .custom-btn {
+    /* Define the default button style */
+    background-color: transparent;
+    border: 1px solid #343a40; /* Dark border color */
+    color: #343a40; /* Dark text color */
+    padding: 6px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 10px; /* Add some bottom margin */
+}
+
+/* Define the button color when hovered */
+.custom-btn:hover {
+    background-color: #4154f1;
+    color: #fff; /* White text color */
+    border-color: #007bff; /* Blue border color */
+}
+
+/* Position the button */
+.add-certification-button {
+    float:left;
+    margin-right:30px; /* Adjust as needed */
+   
+}
+
+
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteLinks = document.querySelectorAll('.delete-link');
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const itemId = this.getAttribute('data-item-id');
+                const confirmed = confirm(`Are you sure want to delete?`);
+
+                if (confirmed) {
+                    window.location.href = this.href; // Proceed with deletion
+                } else {
+                    // Do nothing or handle cancellation
+                    console.log('Deletion cancelled');
+                }
+            });
+        });
+    });
+</script>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1><b>Course Certification</b></h1>
+        <nav>
+        </nav>
+    </div><!-- End Page Title -->
+
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+
+
+                        <!-- Table with stripped rows -->
+                        <form  action="{% if member.id %}{% url 'update_cer' id=members.id %}{% else %}{% url 'add_certification' %}{% endif %}" method="post" id="form">
+                            {% csrf_token %}
+                       
+                        <div class="row mb-3">
+                            <div class="col-sm-8 mb-3">
+                                  <label for="certificateadd" class="label">Course Certification</label>
+                                  <input name="certificateadd" value="{{members.certificateadd}}" type="text"  class="form-control">
+                            </div>
+                        </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                <button type="submit" id="form-submit" class="btn btn-primary">Save</button>
+                               </div>
+                           </div>
+                        </form>
+                        
+                        <table class="table datatable">
+                            <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th scope="col">Ceritification Name</th>
+                                <th></th>  
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in certificates %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ i.certificateadd }}</td>
+                                <td>
+                                    <a href={% url 'update_cer' id=i.id %}>
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                   
+                                      <a href={% url 'deleaddcourse' id=i.id %} class="delete-link" data-item-id="{{ i.id }}">
+                                      <i class="bi bi-trash3-fill"></i>
+                                      </a>
+                              </td>
+                              {% endfor %}
+                            </tr>
+                          </tbody>
+                        </table>
+                    </tbody>
+                  </table>
+      <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+      <script>
+        function confirmDelete(memberId) {
+           var result = confirm("Are you sure you want to delete this member?");
+           if (result) {
+               // User confirmed, perform deletion
+               console.log("User confirmed deletion");
+               // Perform deletion using AJAX
+               $.ajax({
+                   url: '/delete/' + memberId,
+                   method: 'POST', // Assuming your view uses POST method for deletion
+                   success: function(response) {
+                       // Redirect to the same page after deletion
+                       window.location.href = window.location.href;
+                   },
+                   error: function(xhr, status, error) {
+                       console.error(error);
+                       // Handle error if deletion fails
+                   }
+               });
+           } else {
+               // User canceled, do nothing
+               console.log("User canceled deletion");
+               // Prevent the default action of the link (to avoid redirection)
+               event.preventDefault();
+           }
+       }
+      </script>
+       
+      </body>
+      </html>  
+                    <!-- End Table with stripped rows -->
+      
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+          </section>
+      
+        </main>
+      </body>
+      
+      </html>
+      {% include 'footer.html' %}

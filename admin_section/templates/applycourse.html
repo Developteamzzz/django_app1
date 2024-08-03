@@ -1,0 +1,270 @@
+{% load static %}
+{% include 'header.html' %}
+<style>
+td{
+    font-size: 16px;
+    font-family:Arial;
+    font-weight: 450;
+}
+  /* Custom styles for the modal */
+.modal-header {
+    background-color:#808080;
+    color: white;
+   
+}
+.modal-title {
+    font-weight: 500;
+}
+.modal-body {
+    padding: 10px;
+}
+.modal-footer {
+    padding: 10px;
+    text-align: right;
+}
+.modal-content {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.close {
+    color: rgb(0, 0, 0);
+    border-radius: 2px;
+    position: absolute;
+    right: 15px;  /* Adjust as needed */
+    top: 15px; 
+}
+.form-group label {
+    font-weight: bold;
+    color: rgb(0,0,0);  
+    margin-bottom: 8px; /* Adjust the value as needed */  
+}
+.form-control {
+    border-radius: 6px;
+    border: 3px solid #ced4da;
+}
+.btn-primary {
+    background-color: #4154f1;
+    border-color: #007bff;
+    border-radius: 6px;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+.btn-secondary {
+    border-radius: 6px;
+}
+#applyCourseModal .modal-dialog {
+    max-width: 500px;
+}
+#applyCourseModal .modal-content {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+td,th{
+    text-align:left;
+}
+</style>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+<script>  
+function fetchCoursesAndShowModal(student_id) {
+    $.ajax({
+        url: '{% url "apply" %}?student_id=' + student_id,
+        method: 'GET',
+        success: function(response) {
+            if (response.courses && response.courses.length > 0) {
+                var modalContent = `
+                    <div class="modal-header">
+                        <h5 class="modal-title">Apply Courses</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="applyCourseForm">
+                            <div class="form-group">
+                                <label for="course_id">Select Course</label>
+                                <select id="course_id" class="form-control" name="course_id">
+                                    ${response.courses.map(course => `<option value="${course.id}">${course.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <input type="hidden" id="student_id" name="student_id" value="${student_id}">
+                            <input type="hidden" id="course_status" name="course_status" value="applied">
+                            <input type="hidden" id="payment_id" name="payment_id" value="1">
+                            <input type="hidden" id="applied_on" name="applied_on" value="${new Date().toISOString()}">
+                            <input type="hidden" id="applied_by" name="applied_by" value="0">
+                            {% csrf_token %}
+                        </form>
+                
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="submitApplicationForm(${student_id})">Apply</button>
+                    </div>`;
+                $('#applyCourseModal').modal('hide');
+                $('#applyCourseModal .modal-content').html(modalContent);
+                $('#applyCourseModal').modal('show');
+            } else {
+                $('#applyCourseModal').modal('hide');
+                alert('No courses available.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+            $('#applyCourseModal .modal-body').html('<p>Error fetching data. Please try again.</p>');
+            $('#applyCourseModal').modal('show');
+        }
+    });
+     //jQuery click handler for close button
+     $(document).on('click','[data-dismiss="modal"]', function() {
+        $('#applyCourseModal').modal('hide');
+    });
+}
+
+function submitApplicationForm(student_id) {
+    var data = {
+        student_id: $('#student_id').val(),
+        course_id: $('#course_id').val(),
+        course_status: 'applied',
+        payment_id: 1,
+        applied_on: new Date().toISOString(),
+        applied_by: 0,
+        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+    };
+
+    fetch('{% url "apply" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response from server:', data);
+        if (data.message) {
+            alert(data.message);
+            $('#applyCourseModal').modal('hide');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+    
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteLinks = document.querySelectorAll('.delete-link');
+
+    deleteLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const itemId = this.getAttribute('data-item-id');
+            const confirmed = confirm(`Are you sure want to delete?`);
+
+            if (confirmed) {
+                window.location.href = this.href; // Proceed with deletion
+            } else {
+                // Do nothing or handle cancellation
+                console.log('Deletion cancelled');
+            }
+        });
+    });
+});
+</script>
+       
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1><b>Student Table</b></h1>
+      <nav>
+      </nav>
+    </div><!-- End Page Title -->
+
+  <!--Modal-->
+  <div class="modal fade" id="applyCourseModal" tabindex="-1" role="dialog" aria-labelledby="applyCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Content will be loaded dynamically -->
+            <div class="modal-body">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Your link to trigger the modal -->
+
+    <section class="section">
+
+        <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">View Student Details</h5>
+
+              <!-- Your HTML structure -->  
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th scope="col">Sl no</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for i in registers %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ i.firstname }}</td>
+                      <td>{{ i.lastname}}</td>
+                      <td>{{ i.email }}</td>
+                      <td>{{ i.gender }}</td>
+                      <td>{{ i.contact}}</td>
+                      <td style="text-align:center;">
+                    
+                      <a href="{% url 'application_course' id=i.id %}" class="bi bi-arrow-down-left-square" title="Applied Course"></a>
+                    
+                      <button style="border:none; background-color: Transparent;" onclick="fetchCoursesAndShowModal({{ i.id }})"><a class="bi bi-journal-bookmark-fill" title="Apply Course"></a></button>
+                      
+                      {% comment %} <a href="#" class="bi bi-printer"></a> {% endcomment %}
+
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  
+              </tbody>
+            </table>
+          </tbody>
+        </table>            
+
+
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
+{% include 'footer.html' %}
