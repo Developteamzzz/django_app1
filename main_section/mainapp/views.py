@@ -64,6 +64,7 @@ def signup(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         cpassword = request.POST.get('cpassword')
+        added_by = 1
         username = request.POST.get('username')
         if username == 'email':
             username = email
@@ -72,19 +73,16 @@ def signup(request):
         else:
             username = contact
         # Create user object
+      
         user = student(
             firstname=firstname, lastname=lastname, gender=gender, dob=dob,
             qualification=qualification, contact=contact, email=email,
-            username=username, password=password, cpassword=cpassword
+            username=username, password=password, cpassword=cpassword,added_by=added_by
             )
-
         # Save the user
         user.save()
-
-        # Assuming 'added_by' should be the ID of the user performing the signup
         user.added_by = request.user.id if request.user.is_authenticated else 1
         user.save()
-
         # Generate OTP
         otp = ''.join(random.choices(string.digits, k=6))
         # Save OTP to session
@@ -180,27 +178,31 @@ def signupcomplete(request):
 
 
 def loginmain(request):
-    try:
-        message = ""  # Initialize message
-        if request.method == "POST":
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+    message = ""  # Initialize message
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        try:
             # Check if student with given username and password exists
-            if student.objects.filter(username=username, password=password).exists():
-                student_obj = student.objects.get(username=username, password=password)
-                request.session['sid'] = student_obj.id  # Store student ID in session
-                studentid = student_obj.id  # Set student_id for context
+            student_obj = student.objects.get(username=username, password=password)
+            request.session['sid'] = student_obj.id  # Store student ID in session
+            
+            studentid = student_obj.id  # Set student_id for context
+            
+            try:
                 course = get_object_or_404(courses, id=1)
-                print(f"Session ID set: {request.session['sid']}")  # Debug statement
                 return redirect('course_detail', studentid=studentid, courseid=course.id)
-            else:
-                # Handle invalid credentials here (for example, show an error message)
-                message = "Invalid username or password"
-    except Exception as e:
-        return HttpResponse(f'An error occured:{e}')
+            except Http404:
+                # Handle the case where the course with id=1 does not exist
+                return render(request, 'public_course.html')
+                
+        except student.DoesNotExist:
+            # Handle invalid credentials here
+            message = "Invalid username or password"
+        except Exception as e:
+            return HttpResponse(f'An error occurred: {e}')
     return render(request, 'mainlogin.html', {'message': message})
-
-
 
 
 def otp_verify(request):
@@ -329,7 +331,6 @@ def course_detail(request, studentid, courseid):
             'application_id': application.id
         }
         return JsonResponse(response, status=201)
-
     return render(request, 'coursegrid.html', context)
 
 

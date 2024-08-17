@@ -55,12 +55,16 @@ def reg(request):
         # Example of rendering the data in a template (adjust as needed)
             r = student(place=place,category=category,firstname=firstname,lastname=lastname,gender=gender,gname=gname,dob=dob,age=age,maritalstatus=maritalstatus, qualification=qualification, contact=contact, gcontact=gcontact, whatsapp=whatsapp, email=email, occupation=occupation, address=address,city=city, district=district, post=post, pin=pin,image=myfile)
             r.save()
-
+           
     duration= course_duration.objects.exclude(isdelete=1)
     course=courses.objects.exclude(isdelete=1)
     batch=course_batch.objects.exclude(isdelete=1)
     return render(request, 'studentform.html',{'add_duration':duration,'course':course,'batch':batch})
 
+def added_by(request,id):
+    instance = student()
+    instance.added_by = 0
+    instance.save() 
 
 @csrf_exempt
 def std(request):
@@ -156,7 +160,6 @@ def update_student(request, id):
         member.gcontact = gcontact
         member.save()
         return redirect('update_student', id=id)
-
     duration = course_duration.objects.exclude(isdelete=1)
     course = courses.objects.exclude(isdelete=1)
     batch=course_batch.objects.exclude(isdelete=1)
@@ -743,7 +746,8 @@ def add_category(request):
         f = fs.save(myfile.name, myfile)
         k = course_category(categoryadd=categoryadd, image=myfile)
         k.save()
-        return render(request, 'category.html')
+        return redirect('show_category')
+    return render(request, 'category.html')
 
 
 def show_category(request):

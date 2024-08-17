@@ -20,6 +20,7 @@ from django.conf import settings
 
 
 urlpatterns = [
+    path('admin2/', admin.site.urls),  # Default admin path
     path('', include('main_section.mainapp.urls')),  # Set the main URL to mainapp.urls
     path('admin/', include('admin_section.capp.urls')),  # Serve admin section from admin_section.capp.urls
 ]
