@@ -38,20 +38,6 @@ def main(request):
     course_categories=course_category.objects.exclude(isdelete=1)
     course_all=courses.objects.exclude(isdelete=1)
     category_counts = courses.objects.filter(isdelete=0).values('category').annotate(total_courses=Count('id'))
-    
-    # courses_with_details = []
-    # for course in course_all:
-    #     coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
-    #     duration = course_duration.objects.get(id=course.duration).durationadd
-    #     # Add all details to a dictionary
-    # course_details = {
-    #         'id':course.id,
-    #         'coursetype': coursetype,
-    #         'duration': duration,
-    #     }
-        
-    # Add the course details dictionary to the list
-    # courses_with_details.append(course_details)
 
     context={
         'inst':instructor,
@@ -434,8 +420,22 @@ def contact(request):
 
 def maincourse(request):
     non_deleted_courses = courses.objects.exclude(isdelete=1)
+    courses_with_details = []
+    for course in non_deleted_courses:
+        coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
+        duration = course_duration.objects.get(id=course.duration).durationadd
+        # Add all details to a dictionary
+    course_details = {
+            'id':course.id,
+            'coursetype': coursetype,
+            'duration': duration,
+        }
+        
+    #Add the course details dictionary to the list
+    courses_with_details.append(course_details)
     context={
         'course': non_deleted_courses,
+        'detail':  courses_with_details,
     }
     return render(request,'public_course.html',context)
 
