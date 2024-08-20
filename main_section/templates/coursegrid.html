@@ -196,11 +196,6 @@
                 </div>
                 <!--================= Breadcrumbs Section End Here =================-->
               
-           
-                
-                {% comment %} <input type="number" value="{{student.id}}">
-                <input type="number" value="{{course.id}}"> {% endcomment %}
-                {% comment %} <p>Course ID: {{ courseid.id }}</p> {% endcomment %}
               
                            {% comment %} <h4 style="color:rgb(255,255,255);color:rgb(255,255,255); text-decoration-line:none; font-family: 'Source Sans Pro', sans-serif; font-weight:700; font-size:24px;"> <br>Did you Complete Profile?</h4>  {% endcomment %}
                         <button type="button" class="btn-btn" id="profile-complete-button">
@@ -276,6 +271,7 @@
                             </div>
                         </div>                                                  
                         <div class="row">   
+                            {% comment %} {% for i in courses %}     {% endcomment %}
                             {% for i in courses %}    
                             <div class="single-studies col-lg-4 grid-item">
                                 <div class="inner-course">
@@ -284,12 +280,12 @@
                                        <img src="../../../media/{{i.image}}" alt="Course Image" class="img-course" >
                                     </div>
                                     <div class="case-content">                              
-                                      
-                                        <h4 class="case-title"><a href=  "{% url 'course_pro' courseid=i.id studentid=student.id %}">{{ i.course }}</a></h4>
-
+                                
+                                       <h4 class="case-title"><a href=  "{% url 'course_pro' courseid=i.id studentid=student.id %}">{{ i.course }}</a></h4>
+                                     {% comment %} <h4 class="case-title"><a href= "">{{ i.course }}</a></h4>  {% endcomment %}
                                         
                                         <ul class="meta-course">
-                                            {% for detail in course_detail %}
+                                           {% for detail in course_detail %} 
                                             <li><p title="Duration"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book" ><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></p>{{detail.duration}}</li>
                                             <li><p title="Course Type"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></p>{{detail.coursetype}}</li>
                                            {% endfor %}
@@ -303,8 +299,13 @@
                                                 id="apply-now-btn" onclick="applyNow({{ student.id }}, {{ i.id }})">Apply Now</button>-->
                                               
                                                 
-                                                <button style="font-size: 14px;font-weight:600;background:#3270fc;padding:4px 9px 7px;color:#fff;border-radius: 5px;border:none;" id="apply-btn-{{ i.id }}" onclick="applyNow({{ student.id }}, {{ i.id }})">Apply Now</button>
-                                 
+                                                {% comment %} <button style="font-size: 14px;font-weight:600;background:#3270fc;padding:4px 9px 7px;color:#fff;border-radius: 5px;border:none;" id="apply-btn-{{ i.id }}" onclick="applyNow({{ student.id }}, {{ i.id }})">Apply Now</button> {% endcomment %}
+                                                <a href="{% url 'course_pro' courseid=i.id studentid=student.id %}" style="text-decoration: none;">
+                                                    <button style="font-size: 14px; font-weight: 600; background: #3270fc; padding: 4px 9px 7px; color: #fff; border-radius: 5px; border: none; cursor: pointer;">
+                                                        Apply Now
+                                                    </button>
+                                                </a>
+                                                
                                                
                                             </li>
                                             <li class="price">{{i.code}}</li>
@@ -365,12 +366,12 @@
                         <h3 class="footer-title">About Us</h3>
                         <div class="footer-menu">
                             <ul>
-                                <li><a href="about.html">About</a></li>
-                                <li><a href="coureses-grid.html">Courses</a></li>
-                                <li><a href="#">Events</a></li>
+                                <li><a href="first">About</a></li>
+                                <li><a href="maincourse">Courses</a></li>
+                                {% comment %} <li><a href="#">Events</a></li>
                                 <li><a href="#">Career</a></li>
-                                <li><a href="profile.html">Become a Teacher</a></li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="profile.html">Become a Teacher</a></li> {% endcomment %}
+                                <li><a href="contact">Contact</a></li>
                             </ul>
                         </div>
                     </div>

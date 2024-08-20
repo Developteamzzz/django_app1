@@ -14,11 +14,11 @@
     <section class="section dashboard">
       <div class="row">
 
-        <!-- Left side columns -->
+        {% comment %} <!-- Left side columns -->
         <div class="col-lg-8">
-          <div class="row">
+          <div class="row"> {% endcomment %}
 
-            <!-- Sales Card -->
+            {% comment %} <!-- Sales Card -->
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card sales-card">
 
@@ -51,9 +51,9 @@
                 </div>
 
               </div>
-            </div><!-- End Sales Card -->
+            </div><!-- End Sales Card --> {% endcomment %}
 
-            <!-- Revenue Card -->
+            {% comment %} <!-- Revenue Card -->
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
 
@@ -68,9 +68,9 @@
                     <li><a class="dropdown-item" href="#">This Month</a></li>
                     <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
-                </div>
+                </div> {% endcomment %}
 
-                <div class="card-body">
+                {% comment %} <div class="card-body">
                   <h5 class="card-title">Revenue <span>| This Month</span></h5>
 
                   <div class="d-flex align-items-center">
@@ -123,7 +123,7 @@
                 </div>
               </div>
 
-            </div><!-- End Customers Card -->
+            </div><!-- End Customers Card --> {% endcomment %}
 
             <!-- Reports -->
             <div class="col-12">
@@ -281,7 +281,7 @@
               </div>
             </div><!-- End Recent Sales -->
 
-            <!-- Top Selling -->
+            {% comment %} <!-- Top Selling -->
             <div class="col-12">
               <div class="card top-selling overflow-auto">
 
@@ -359,9 +359,9 @@
         </div><!-- End Left side columns -->
 
         <!-- Right side columns -->
-        <div class="col-lg-4">
+        <div class="col-lg-4"> {% endcomment %}
 
-          <!-- Recent Activity -->
+          {% comment %} <!-- Recent Activity -->
           <div class="card">
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -432,9 +432,9 @@
               </div>
 
             </div>
-          </div><!-- End Recent Activity -->
+          </div><!-- End Recent Activity --> {% endcomment %}
 
-          <!-- Budget Report -->
+          {% comment %} <!-- Budget Report -->
           <div class="card">
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -505,10 +505,10 @@
                 });
               </script>
 
-            </div>
+            </div> {% endcomment %}
           </div><!-- End Budget Report -->
 
-          <!-- Website Traffic -->
+          {% comment %} <!-- Website Traffic -->
           <div class="card">
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -584,9 +584,9 @@
               </script>
 
             </div>
-          </div><!-- End Website Traffic -->
+          </div><!-- End Website Traffic --> {% endcomment %}
 
-          <!-- News & Updates Traffic -->
+          {% comment %} <!-- News & Updates Traffic -->
           <div class="card">
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -642,7 +642,7 @@
 
         </div><!-- End Right side columns -->
 
-      </div>
+      </div> {% endcomment %}
     </section>
 
   </main><!-- End #main -->

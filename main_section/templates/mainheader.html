@@ -54,36 +54,14 @@
                         <ul id="backmenu" class="react-menus react-sub-shadow">
                             
                         {% if request.session.sid %}
-                        <li> <a href="../../../main">Home</a>
-                            {% comment %} <ul>
-                                <li> <a href="">Home One</a></li>
-                            </ul> {% endcomment %}
-                        </li>
+                        <li> <a href="../../../main">Home</a></li>
                      
-                    
-                        <li> <a href="../../../user_pro?sid={{ request.session.sid }}">User Profile</a></li>
+                        <li> <a href="../../../userpro?sid={{ request.session.sid }}">User Profile</a></li>
                           
-                        </li>
-                                <!-- Debugging output -->
-                        {% comment %} <p>Session ID: {{ request.session.sid }}</p>
-                        <p>Course ID: {{ course.id }}</p> {% endcomment %}
-                        {% comment %} <li> 
-                        <a href="../../../course_detail?/{{ request.session.sid }}/{{ course.id }}">Courses</a>
-                            {% comment %} <ul>
-                                <li><a href=>Courses</a></li>
-                            </ul> {% endcomment %}
-                            <li>
-                                <!-- Example template link -->
-                            <a href="../../../course_detail/{{request.session.sid}}/{{course.id}}/">Courses</a>
-
-                            </li>
+                      
+                        <li><a href="../../../course_detail/{{student.id}}/">Courses</a> </li>
                             
-                        </li> 
-                        <li> <a href="../../../signout">Sign out</a>
-                            {% comment %} <ul>
-                                <li> <a href=>Sign out</a></li>
-                            </ul> {% endcomment %}
-                        </li>
+                        <li> <a href="../../../signout">Sign out</a></li>
                     </ul>
                            
                         {% else %}

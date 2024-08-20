@@ -41,7 +41,20 @@ def main(request):
     course_categories=course_category.objects.exclude(isdelete=1)
     course_all=courses.objects.exclude(isdelete=1)
     category_counts = courses.objects.filter(isdelete=0).values('category').annotate(total_courses=Count('id'))
-
+    
+    # courses_with_details = []
+    # for course in course_all:
+    #     coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
+    #     duration = course_duration.objects.get(id=course.duration).durationadd
+    #     # Add all details to a dictionary
+    # course_details = {
+    #         'id':course.id,
+    #         'coursetype': coursetype,
+    #         'duration': duration,
+    #     }
+        
+    # Add the course details dictionary to the list
+    # courses_with_details.append(course_details)
     context={
         'inst':instructor,
         'course': course_categories,
@@ -191,8 +204,8 @@ def loginmain(request):
             studentid = student_obj.id  # Set student_id for context
             
             try:
-                course = get_object_or_404(courses, id=1)
-                return redirect('course_detail', studentid=studentid, courseid=course.id)
+                # course = get_object_or_404(courses, id=1)
+                return redirect('course_detail', studentid=studentid)
             except Http404:
                 # Handle the case where the course with id=1 does not exist
                 return render(request, 'public_course.html')
@@ -278,33 +291,29 @@ def validate_username(request):
     return JsonResponse(data)
 logger = logging.getLogger(__name__)
 
-
-def course_detail(request, studentid, courseid):
-    # Log the received IDs
-    #logger.info(f"Received studentid: {studentid}, courseid: {courseid}")
-    
-    # Example logic to retrieve course details
+def course_detail(request, studentid):
     non_deleted_courses = courses.objects.exclude(isdelete=1)
-    course = get_object_or_404(courses, id=courseid)
+    # course = get_object_or_404(courses)
     students = get_object_or_404(student, id=studentid)
     add= students.is_complete
-   
+
     courses_with_details = []
-    coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
-    duration = course_duration.objects.get(id=course.duration).durationadd
-     # Add all details to a dictionary
+    for course in non_deleted_courses:
+        coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
+        duration = course_duration.objects.get(id=course.duration).durationadd
+        # Add all details to a dictionary
     course_details = {
             'id':course.id,
             'coursetype': coursetype,
             'duration': duration,
         }
         
-        # Add the course details dictionary to the list
+    # #Add the course details dictionary to the list
     courses_with_details.append(course_details)
     context = {
         'courses':non_deleted_courses ,
         'course_detail': courses_with_details,
-        'course': course,   # Passing course object to context
+        # Passing course object to context
         'student': students, # Passing student object to context
         'is_complete':add,  # Pass the iscomplete value
     }
@@ -315,14 +324,14 @@ def course_detail(request, studentid, courseid):
         course_status = 'applied'
         applied_on = timezone.now()
 
-        # Create and save the Course_Application object
+    # Create and save the Course_Application object
         application = Course_Application.objects.create(
-            student_id=students.id,
-            course_id=course.id,
-            applied_on=applied_on,
-            applied_by=applied_by,
-            course_status=course_status,
-            payment_id=payment_id
+        student_id=students.id,
+        course_id=course.id,
+        applied_on=applied_on,
+        applied_by=applied_by,
+        course_status=course_status,
+        payment_id=payment_id
         )
 
         response = {
@@ -331,7 +340,8 @@ def course_detail(request, studentid, courseid):
             'application_id': application.id
         }
         return JsonResponse(response, status=201)
-    return render(request, 'coursegrid.html', context)
+   
+    return render(request, 'coursegrid.html',context)
 
 
 def course_pro(request, courseid, studentid):
@@ -400,7 +410,7 @@ def course_pro(request, courseid, studentid):
     return render(request, 'profilecourse.html', context)
 
 
-def user_pro(request):
+def userpro(request):
     sid = request.GET.get('sid')
     if sid:
         students = get_object_or_404(student, id=sid)

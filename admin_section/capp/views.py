@@ -86,7 +86,7 @@ def profileview(request,id):
     # student_with_details = []
     # batch= course_batch.objects.get(id=student.batch).title
     # category= courses.objects.get(id=student.course_category).category
-    #  # Add all details to a dictionary
+    ## Add all details to a dictionary
     # course_details = {
     #         'batch':batch,
     #         'category':category,
@@ -428,22 +428,24 @@ def certification(request):
     non_deleted_certificate =course_certification.objects.exclude(isdelete=1)
     return render(request, 'certification.html', { 'certificates': non_deleted_certificate}) 
 
-def add_certification(request):
-    if request.method == 'POST':
-        certificateadd = request.POST.get('certificateadd')
-        l=course_certification(certificateadd=certificateadd)
-        l.save()
-        return HttpResponseRedirect(reverse(certification))
-    return render(request,'certification.html')
+def add_certification(request, id=None):
+    if id:
+        member = get_object_or_404(course_certification, id=id)
+    else:
+        member = None
 
-def update_cer(request, id):
-    member = course_certification.objects.get(id=id)
     if request.method == 'POST':
         certificateadd = request.POST.get('certificateadd')
-        member.certificateadd= certificateadd
-        member.save()
-        return HttpResponseRedirect(reverse(certification))
-    return render(request,'certification.html', {'members': member})
+        if member:
+            # Update existing record
+            member.certificateadd = certificateadd
+            member.save()
+        else:
+            course_certification.objects.create(certificateadd=certificateadd)
+            # Create new record
+        return redirect('certification')
+
+    return render(request, 'certification.html', {'member': member})
 
 def deleaddcourse(request,id):
    # Soft delete by marking is_deleted as 1
@@ -463,14 +465,24 @@ def added_by(request,id):
     instance.added_by = 0
     instance.save()
 
-#coursetype
-def add_coursetype(request):
+def add_coursetype(request, id=None):
+    if id:
+        member = get_object_or_404(course_type, id=id)
+    else:
+        member = None
+
     if request.method == 'POST':
-        coursetypeadd= request.POST.get('coursetypeadd')
-        k=course_type(coursetypeadd=coursetypeadd)
-        k.save()
-        return HttpResponseRedirect(reverse(show_course))
-    return render(request,'coursetype.html')
+        coursetypeadd = request.POST.get('coursetypeadd')
+        if member:
+            # Update existing record
+            member.coursetypeadd = coursetypeadd
+            member.save()
+        else:
+            course_type.objects.create(coursetypeadd=coursetypeadd)
+            # Create new record
+        return redirect('show_course')
+
+    return render(request, 'coursetype.html', {'member': member})
 
 def show_course(request):
     # Exclude deleted course types
@@ -495,28 +507,30 @@ def added_by(request,id):
     instance.added_by = 0
     instance.save()
 
-def update_type(request, id):
-    member = course_type.objects.get(id=id)
-    if request.method == 'POST':
-        coursetypeadd = request.POST.get('coursetypeadd')
-        member.coursetypeadd= coursetypeadd
-        member.save()
-        return HttpResponseRedirect(reverse('show_course'))
-    return render(request,'coursetype.html', {'members': member})
-
 #course duration
 def show_duration(request):
     non_deleted_duration =course_duration.objects.exclude(isdelete=1)
     return render(request,'courseduration.html',{'duration': non_deleted_duration})
 
 
-def add_duration(request):
+def add_duration(request, id=None):
+    if id:
+        member = get_object_or_404(course_duration, id=id)
+    else:
+        member = None
+
     if request.method == 'POST':
         durationadd = request.POST.get('durationadd')
-        b=course_duration(durationadd=durationadd)
-        b.save()
-        return HttpResponseRedirect(reverse(show_duration))
-    return render(request,'courseduration.html')
+        if member:
+            # Update existing record
+            member.durationadd = durationadd
+            member.save()
+        else:
+            course_duration.objects.create(durationadd=durationadd)
+            # Create new record
+        return redirect('show_duration')
+
+    return render(request, 'courseduration.html', {'member': member})
 
 def deleteduration(request, id):
     # Soft delete by marking is_deleted as 1
@@ -535,15 +549,6 @@ def added_by(request,id):
     instance = course_duration()
     instance.added_by = 0
     instance.save()
-
-def update_duration(request,id):
-    member = course_duration.objects.get(id=id)
-    if request.method == 'POST':
-        durationadd = request.POST.get('durationadd')
-        member.durationadd= durationadd
-        member.save()
-        return HttpResponseRedirect(reverse(show_duration))
-    return render(request,'courseduration.html', {'members': member})
 
 #course batch
 def batch(request):
@@ -889,9 +894,9 @@ def update_instructor(request, id):
 def popularadd(request, id):
     item = get_object_or_404(courses, id=id)
     # Retrieve the is_popular parameter from the URL
-    is_popular = request.GET.get('is_popular', '0')
+    is_popular = request.GET.get('is_popular', '1')
     # Update the item based on the is_popular value
-    item.is_popular = (is_popular == '1')
+    item.is_popular = (is_popular == '0')
     item.save()
     return HttpResponseRedirect(reverse(courseview))
 

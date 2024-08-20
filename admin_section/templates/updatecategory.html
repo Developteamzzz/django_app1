@@ -40,7 +40,8 @@
               
               <form action="{% url 'update_category' id=members.id %}" method="post" id="form">  
                 {% csrf_token %}
-                Update Course Category: <input type="text" value="{{members.categoryadd}}" name="categoryadd">  
+                Update Course Category: <input type="text" value="{{members.categoryadd}}" name="categoryadd"> 
+                 
                 <button type="submit" id="form-submit" style="border-radius:12px;" class="btn btn-primary">Save</button>
                </form>
 

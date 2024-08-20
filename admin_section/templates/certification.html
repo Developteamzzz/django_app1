@@ -76,19 +76,19 @@
 
 
                         <!-- Table with stripped rows -->
-                        <form  action="{% if member.id %}{% url 'update_cer' id=members.id %}{% else %}{% url 'add_certification' %}{% endif %}" method="post" id="form">
+                        <form  action="{% if member %}{% url 'add_certification' id=member.id %}{% else %}{% url 'add_certification' %}{% endif %}" method="post" id="form">
                             {% csrf_token %}
                        
                         <div class="row mb-3">
                             <div class="col-sm-8 mb-3">
                                   <label for="certificateadd" class="label">Course Certification</label>
-                                  <input name="certificateadd" value="{{members.certificateadd}}" type="text"  class="form-control">
+                                  <input name="certificateadd" value="{{member.certificateadd}}" type="text"  class="form-control">
                             </div>
                         </div>
                             
                             <div class="row mb-3">
                                 <div class="col-sm-10">
-                                <button type="submit" id="form-submit" class="btn btn-primary">Save</button>
+                                <button type="submit" id="form-submit" class="btn btn-primary">{% if member %}Update{% else %}Save{% endif %}</button>
                                </div>
                            </div>
                         </form>
@@ -107,7 +107,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ i.certificateadd }}</td>
                                 <td>
-                                    <a href={% url 'update_cer' id=i.id %}>
+                                    <a href={% url 'add_certification' id=i.id %}>
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                    

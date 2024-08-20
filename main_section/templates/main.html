@@ -172,7 +172,7 @@
                                         <li><i class="icon_check"></i> Upskill your organization. </li>
                                     </ul>
                                     <div class="about__btn">
-                                        <a href="about.html"> Read More <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                                        <a href=""> Read More <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
                                     </div>
                                 </div>
                             </div>
@@ -204,38 +204,49 @@
                         </div>
                      
                         <div class="row react-grid">  
-                            {% for i in course_all %}                          
+                            {% for i in course_all %}   
+                            {% if i.is_popular == 1 %}                       
                             <div class="single-studies col-lg-4 grid-item filter2 filter3">
                                 <div class="inner-course">
                                     <div class="case-img">
                                         <a href="#" class="cate-w">Web Design</a>
-                                        {% if i.is_popular == 0 %}
-                                        <img src="../media/{{i.image}}" alt="Course Image">
-                                        {% elif i.is_popular == 1 %}
-                                        {% endif %}
+                                     
                                       
+                                        <img src="../media/{{i.image}}" alt="Course Image" style="border:None;">
+                                      
+                                       
                                     </div>
                                     <div class="case-content">
+                                        <h4 class="case-title"> <a href="loginmain">{{i.course}}</a></h4>
                                         <ul class="meta-course">
-                                            {% comment %} <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 4.5 review </li> {% endcomment %}
-                                            {% comment %} <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> {{ i.durati}}</li>
-                                                <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>{{i.hours}}</li>
-                                                <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>{{i.total}}</li> {% endcomment %}
-                                          
+                                    
+                                          {% comment %} <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 4.5 review </li>  {% endcomment %}
+                                          {% comment %} {% for detail in course_all %} 
+                                          <li><p title="Duration"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></p> {{ detail.duration}}</li>
+                                          <li><p title="Course Type"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></p> {{detail.coursetype}}</li>
+                                          {% endfor %}
+                                                <li><p title="Total Hours"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></p> {{i.hours}}</li> 
+                                           {% endcomment %}
                                         </ul>
-                                        <h4 class="case-title"> <a href="coureses-single.html">{{i.course}}</a></h4>
+                                     
                                         <div class="react__user">
                                             {% comment %} <img src="{% static 'states/images/course/small-image/1.png' %}" alt="user"> Justin Case {% endcomment %}
                                         </div>
-                                        {% comment %} <ul class="react-ratings">
-                                            {% comment %} <li class="react-book"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></li>
+                                         <ul class="react-ratings">
+                                            <a href="loginmain" style="text-decoration: none;">
+                                                <button style="font-size: 14px; font-weight: 600; background: #3270fc; padding: 4px 9px 7px; color: #fff; border-radius: 5px; border: none; cursor: pointer;">
+                                                    Apply Now
+                                                </button>
+                                            </a>
+                                          {% comment %} <li class="react-book"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></li> {% endcomment %}
                                             <li class="price">{{i.code}}</li>
-                                        </ul> {% endcomment %}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                             {% endfor %}
-                            {% comment %} <div class="single-studies col-lg-4 grid-item filter5 filter1">
+                          {% comment %} <div class="single-studies col-lg-4 grid-item filter5 filter1">
                                 <div class="inner-course">
                                     <div class="case-img">
                                         <a href="#" class="cate-w">Marketing</a>
