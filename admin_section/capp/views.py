@@ -19,8 +19,19 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import json
+import os
 
-logger = logging.getLogger(__name__)
+# Create your views here.                                                
+def delete_debug_log():
+       log_file = "debug.log"
+       if os.path.exists(log_file):
+           os.remove(log_file)
+           print("debug.log deleted successfully.")
+       else:
+           print("debug.log not found.")
+
+delete_debug_log()
+
 
 #index page
 def index(request):

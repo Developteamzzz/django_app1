@@ -30,18 +30,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 import logging
 from django.db.models import Count
-import os
-
-# Create your views here.                                                
-def delete_debug_log():
-       log_file = "debug.log"
-       if os.path.exists(log_file):
-           os.remove(log_file)
-           print("debug.log deleted successfully.")
-       else:
-           print("debug.log not found.")
-
-delete_debug_log()
 
 #main front-end page
  # Assuming you have logic to retrieve course and student objects
