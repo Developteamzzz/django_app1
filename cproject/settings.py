@@ -64,31 +64,31 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 
 # Configure logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': 'debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
 
-# For your custom modules, add specific loggers if needed
-LOGGING['loggers']['your_app_name'] = {
-    'handlers': ['file'],
-    'level': 'DEBUG',
-    'propagate': False,
-}
+# # For your custom modules, add specific loggers if needed
+# LOGGING['loggers']['your_app_name'] = {
+#     'handlers': ['file'],
+#     'level': 'DEBUG',
+#     'propagate': False,
+# }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -99,7 +99,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'admin_section.capp',
     'main_section.mainapp',
-    'debug_toolbar',
     ]
 
 MIDDLEWARE = [
