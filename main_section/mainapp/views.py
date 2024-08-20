@@ -55,6 +55,7 @@ def main(request):
         
     # Add the course details dictionary to the list
     # courses_with_details.append(course_details)
+    
     context={
         'inst':instructor,
         'course': course_categories,

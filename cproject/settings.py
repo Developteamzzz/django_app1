@@ -42,7 +42,6 @@ EMAIL_HOST_PASSWORD = 'pwfiwnmkwjpwutle'  # Replace 'your_password' with the act
     
 ALLOWED_HOSTS = []
     
-ALLOWED_HOSTS = []
 
 # Application definition
 # settings.py
@@ -82,7 +81,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'cproject.urls'
