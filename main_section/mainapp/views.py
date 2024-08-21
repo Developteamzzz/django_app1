@@ -188,11 +188,11 @@ def loginmain(request):
             studentid = student_obj.id  # Set student_id for context
             
             try:
-                # course = get_object_or_404(courses, id=1)
+                course = get_object_or_404(courses, id=1)
                 return redirect('course_detail', studentid=studentid)
             except Http404:
                 # Handle the case where the course with id=1 does not exist
-                return render(request, 'public_course.html')
+                return redirect('maincourse')
                 
         except student.DoesNotExist:
             # Handle invalid credentials here
@@ -419,23 +419,38 @@ def contact(request):
     return render(request,'contact.html')
 
 def maincourse(request):
-    non_deleted_courses = courses.objects.exclude(isdelete=1)
+    # Retrieve all non-deleted courses
+    non_deleted_courses=courses.objects.exclude(isdelete=1)
+    
+    # Initialize an empty list to hold course details
     courses_with_details = []
-    for course in non_deleted_courses:
-        coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
-        duration = course_duration.objects.get(id=course.duration).durationadd
-        # Add all details to a dictionary
-    course_details = {
-            'id':course.id,
-            'coursetype': coursetype,
-            'duration': duration,
-        }
-        
-    #Add the course details dictionary to the list
-    courses_with_details.append(course_details)
-    context={
-        'course': non_deleted_courses,
-        'detail':  courses_with_details,
-    }
-    return render(request,'public_course.html',context)
 
+    # Iterate over non-deleted courses and collect their details
+    for course in non_deleted_courses:
+        try:
+            # Retrieve related details
+            coursetype = course_type.objects.get(id=course.coursetype).coursetypeadd
+            duration = course_duration.objects.get(id=course.duration).durationadd
+            
+            # Create a dictionary of course details
+            course_details = {
+                'id': course.id,
+                'coursetype': coursetype,
+                'duration': duration,
+            }
+            
+            # Add the course details dictionary to the list
+            courses_with_details.append(course_details)
+        except course_type.DoesNotExist:
+            # Handle missing course type
+            continue
+        except course_duration.DoesNotExist:
+            # Handle missing course duration
+            continue
+        # Determine context based on the presence of courses
+
+    context = {
+        'course': non_deleted_courses,
+        'detail': courses_with_details,
+    }
+    return render(request,'public_course.html', context)
