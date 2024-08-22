@@ -51,14 +51,19 @@
                     </div>
                     <!--================= Menu Structure =================--> 
                     <div class="react-inner-menus">
-                        <ul id="backmenu" class="react-menus react-sub-shadow">
+                    <ul id="backmenu" class="react-menus react-sub-shadow">
                             
                         {% if request.session.sid %}
                         <li> <a href="../../../main">Home</a></li>
                      
                         <li> <a href="../../../userpro?sid={{ request.session.sid }}">User Profile</a></li>
                      
-                        <li><a href="../../../course_detail/{{request.session.sid }}/">Courses</a> </li>
+                        <li>{% if  coure_all.isdelete == 0 %}
+                            <a href="{% url 'maincourse' %}">Courses</a>
+                            {% else %}
+                            <a href="../../../course_detail/{{ request.session.sid }}/">Courses</a>
+                          
+                            {% endif %}</li>
                       
                         <li> <a href="../../../signout">Sign out</a></li>
                     </ul>
@@ -71,8 +76,6 @@
                         </li>
                         <li> <a href="maincourse">Courses</a>
                         </li>
-
-                       
                        <li> <a href="contact">Contact</a> 
                             {% comment %} <ul>
                                 <li><a href="contact">Contact</a></li>
@@ -87,9 +90,7 @@
                         </li>
                         {% endif %}
                     </ul>
-                           
-                       
-                 
+                            
                         
                         <div class="searchbar-part"> 
                             <div class="phone-part">

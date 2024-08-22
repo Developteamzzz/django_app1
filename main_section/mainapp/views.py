@@ -188,6 +188,7 @@ def loginmain(request):
             studentid = student_obj.id  # Set student_id for context
             
             try:
+                # Fetch the course object based on a specific ID
                 course = get_object_or_404(courses, id=1)
                 return redirect('course_detail', studentid=studentid)
             except Http404:
@@ -277,7 +278,7 @@ logger = logging.getLogger(__name__)
 
 def course_detail(request, studentid):
     non_deleted_courses = courses.objects.exclude(isdelete=1)
-    # course = get_object_or_404(courses)
+    course = get_object_or_404(courses)
     students = get_object_or_404(student, id=studentid)
     add= students.is_complete
 
@@ -324,6 +325,7 @@ def course_detail(request, studentid):
             'application_id': application.id
         }
         return JsonResponse(response, status=201)
+    # return render(request, 'coursegrid.html')
    
     return render(request, 'coursegrid.html',context)
 

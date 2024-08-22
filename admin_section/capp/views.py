@@ -651,8 +651,8 @@ def log(request):
     email=request.POST.get('email')
     password=request.POST.get('password')
     if email== 'admin@gmail.com' and password == 'admin':
-        request.session['logindetails'] = email
-        request.session['admin'] = 'admin'
+        request.session['email'] = email
+        request.session['password'] = password
         return render(request,'index.html')
     else:
         return render(request,'login.html',{'success':'User login successfully'})   
