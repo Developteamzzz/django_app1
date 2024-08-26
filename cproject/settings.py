@@ -40,7 +40,7 @@ EMAIL_HOST_USER = 'cihsdteam@gmail.com'
 EMAIL_HOST_PASSWORD = 'pwfiwnmkwjpwutle'  # Replace 'your_password' with the actual password for 'cihsdteam@gmail.com'
 # SMTP servaer settings
     
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['54.253.201.97']
     
 
 # Application definition
